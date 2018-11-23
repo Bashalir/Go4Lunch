@@ -11,3 +11,4 @@
 .externalNativeBuild
 /gradle
 /app/build.gradle
+gradle.properties
