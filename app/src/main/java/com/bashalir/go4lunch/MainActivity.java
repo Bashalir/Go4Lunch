@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bashalir.go4lunch.Controllers.Activities.PageActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 
 
 import java.util.Arrays;
@@ -68,6 +67,7 @@ public static final int RC_SIGN_IN=123;
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                this.startPageActivity();
                 // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
@@ -78,6 +78,10 @@ public static final int RC_SIGN_IN=123;
         }
     }
 
+    private void startPageActivity() {
+        Intent intent = new Intent(this, PageActivity.class);
+        startActivity(intent);
+    }
 
 
 }

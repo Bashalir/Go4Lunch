@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_map"
+        android:enabled="true"
+        android:icon="@drawable/ic_map_24dp"
+        android:title="@string/bottom_navigation_menu_map"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_restaurant"
+        android:enabled="true"
+        android:icon="@drawable/ic_restaurant_white_24dp"
+        android:title="@string/bottom_navigation_menu_restaurant"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_workmates"
+        android:enabled="true"
+        android:icon="@drawable/ic_workmates_white_24dp"
+        android:title="@string/bottom_navigation_menu_workmates"
+        app:showAsAction="ifRoom" />
+</menu>

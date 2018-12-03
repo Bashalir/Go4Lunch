@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="slogan">Trouver un bon restaurant et inviter vos collégues pour déjeuner !</string>
+
+    <!-- BOTTOM NAVIGATION VIEW -->
+    <string name="bottom_navigation_menu_map">Carte</string>
+    <string name="bottom_navigation_menu_restaurant">Restaurants</string>
+    <string name="bottom_navigation_menu_workmates">Collègues</string>
 </resources>
