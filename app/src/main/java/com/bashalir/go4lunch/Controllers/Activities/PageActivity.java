@@ -158,9 +158,9 @@ public class PageActivity extends AppCompatActivity implements NavigationView.On
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         // define your fragments here
-        final Fragment mapFragment = new MapFragment();
-        final Fragment restaurantFragment = new RestaurantFragment();
-        final Fragment workmatesFragment = new WorkmatesFragment();
+         Fragment mapFragment = new MapFragment();
+         Fragment restaurantFragment = new RestaurantFragment();
+         Fragment workmatesFragment = new WorkmatesFragment();
 
         // handle navigation selection
         mBottomNavigationView.setOnNavigationItemSelectedListener(

@@ -12,9 +12,15 @@ android {
         buildConfigField("String", "GOOGLE_MAPS_API_KEY", GOOGLE_MAPS_API_KEY)
     }
     buildTypes {
+        debug{
+            buildConfigField ("String", "GOOGLE_MAPS_API_KEY", GOOGLE_MAPS_API_KEY)
+            resValue ("string", "GOOGLE_MAPS_API_KEY", GOOGLE_MAPS_API_KEY)
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField ("String", "GOOGLE_MAPS_API_KEY", GOOGLE_MAPS_API_KEY)
+            resValue ("string", "GOOGLE_MAPS_API_KEY", GOOGLE_MAPS_API_KEY)
         }
     }
     compileOptions {
