@@ -1,6 +1,7 @@
 package com.bashalir.go4lunch.Controllers.Activities;
 
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -24,7 +25,9 @@ import butterknife.ButterKnife;
 import com.bashalir.go4lunch.Controllers.Fragments.MapFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.RestaurantFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.WorkmatesFragment;
+import com.bashalir.go4lunch.MainActivity;
 import com.bashalir.go4lunch.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class PageActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -89,7 +92,9 @@ public class PageActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.logout:
-
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
 
             default:
