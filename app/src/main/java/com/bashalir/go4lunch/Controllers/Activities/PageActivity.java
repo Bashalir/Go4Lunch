@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 
@@ -23,6 +25,8 @@ public class PageActivity extends AppCompatActivity {
 
 @BindView(R.id.activity_page_bottom_navigation)
     BottomNavigationView mBottomNavigationView;
+@BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +34,21 @@ public class PageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_page);
 
         ButterKnife.bind(this);
+
+        this.configureToolbar();
         this.configureBottomView();
          }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //2 - Inflate the menu and add it to the Toolbar
+        getMenuInflater().inflate(R.menu.menu_activity_page, menu);
+        return true;
+    }
+
+    private void configureToolbar() {
+        setSupportActionBar(mToolbar);
+    }
 
     private void configureBottomView() {
         final FragmentManager fragmentManager = getSupportFragmentManager();
