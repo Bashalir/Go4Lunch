@@ -1,4 +1,4 @@
-package com.bashalir.go4lunch.Controllers.Views;
+package com.bashalir.go4lunch.Views;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
