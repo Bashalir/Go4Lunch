@@ -2,17 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimaryDark"
     android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
-    android:gravity="bottom">
+    android:gravity="center">
 
     <ImageView
+        android:id="@+id/logo_menu"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:background="@color/background_light"
         app:srcCompat="@drawable/ic_go4lunch"
         tools:ignore="VectorDrawableCompat" />
 
@@ -21,6 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Go4Lunch"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+       />
 
 </LinearLayout>

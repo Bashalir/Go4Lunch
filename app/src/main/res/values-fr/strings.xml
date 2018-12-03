@@ -6,4 +6,7 @@
     <string name="bottom_navigation_menu_map">Carte</string>
     <string name="bottom_navigation_menu_restaurant">Restaurants</string>
     <string name="bottom_navigation_menu_workmates">Collègues</string>
+    <string name="logout">Déconnecter</string>
+    <string name="settings">Paramètre</string>
+    <string name="your_lunch">Votre Déjeuner</string>
 </resources>
