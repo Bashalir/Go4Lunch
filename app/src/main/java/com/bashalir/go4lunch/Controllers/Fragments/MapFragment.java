@@ -62,20 +62,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         mMapFragment=(SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
-        // IF MAP == NULL
-        if (mMapFragment == null) {
-
-
-            FragmentManager fm = getFragmentManager();
-
-           FragmentTransaction ft = fm.beginTransaction();
-
-            // IMPLEMENT SUPPORT MAP FRAGMENT
-            mMapFragment = SupportMapFragment.newInstance();
-            ft.replace(R.id.map, mMapFragment).commit();
-        }
-
-
         mMapFragment.getMapAsync(this);
 
 
