@@ -9,4 +9,7 @@
     <string name="logout">Déconnecter</string>
     <string name="settings">Paramètre</string>
     <string name="your_lunch">Votre Déjeuner</string>
+
+    <string name="navigation_drawer_open">Ouverture du menu</string>
+    <string name="navigation_drawer_close">Fermeture du menu</string>
 </resources>

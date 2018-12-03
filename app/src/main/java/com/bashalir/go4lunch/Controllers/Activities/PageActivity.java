@@ -3,9 +3,13 @@ package com.bashalir.go4lunch.Controllers.Activities;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,12 +26,17 @@ import com.bashalir.go4lunch.Controllers.Fragments.RestaurantFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.WorkmatesFragment;
 import com.bashalir.go4lunch.R;
 
-public class PageActivity extends AppCompatActivity {
+public class PageActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 @BindView(R.id.activity_page_bottom_navigation)
     BottomNavigationView mBottomNavigationView;
 @BindView(R.id.toolbar)
     Toolbar mToolbar;
+@BindView(R.id.nav_view)
+    NavigationView mNavView;
+@BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +47,74 @@ public class PageActivity extends AppCompatActivity {
 
         this.configureToolbar();
         this.configureBottomView();
+        this.configureNavigationView();
+
          }
+
+    @Override
+
+    public void onBackPressed() {
+
+        // 5 - Handle back click to close menu
+
+        if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+
+            this.mDrawerLayout.closeDrawer(GravityCompat.START);
+
+        } else {
+
+            super.onBackPressed();
+
+        }
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+
+        // 4 - Handle Navigation Item Click
+
+        int id = item.getItemId();
+
+
+        switch (id){
+
+            case R.id.search :
+
+                break;
+
+            case R.id.settings:
+
+                break;
+
+            case R.id.logout:
+
+                break;
+
+            default:
+
+                break;
+
+        }
+
+
+        this.mDrawerLayout.closeDrawer(GravityCompat.START);
+
+
+        return true;
+
+    }
+
+
+
+    private void configureNavigationView() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        mNavView.setNavigationItemSelectedListener(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
