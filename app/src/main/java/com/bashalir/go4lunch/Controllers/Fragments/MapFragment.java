@@ -1,6 +1,7 @@
 package com.bashalir.go4lunch.Controllers.Fragments;
 
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -46,7 +47,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @BindView(R.id.map)
     MapView mMapView;
 
-    private FragmentActivity mContext;
+    private Context mContext;
     private SupportMapFragment mMapFragment;
     private final LatLng mDefaultLocation = new LatLng(48.858093, 2.294694);
     private static final int DEFAULT_ZOOM = 15;
@@ -78,7 +79,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+    mContext=getContext();
         // Construct a GeoDataClient.
         mGeoDataClient = Places.getGeoDataClient(getContext());
 
@@ -174,7 +175,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(mContext, new OnCompleteListener<Location>() {
+                locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
