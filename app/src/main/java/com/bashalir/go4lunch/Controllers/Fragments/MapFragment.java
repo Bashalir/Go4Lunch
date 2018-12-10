@@ -22,7 +22,11 @@ import com.bashalir.go4lunch.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.location.places.PlaceFilter;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,10 +38,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.zip.Inflater;
 
 import butterknife.BindView;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,6 +60,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private final LatLng mDefaultLocation = new LatLng(48.858093, 2.294694);
     private static final int DEFAULT_ZOOM = 15;
 
+    private Disposable mDisp;
     private GoogleMap mMap;
 
     // The entry points to the Places API.
@@ -61,6 +70,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final int  M_MAX_ENTRIES=10;
+
+
+    private String[] mLikelyPlaceNames;
+    private String[] mLikelyPlaceAddresses;
+    private String[] mLikelyPlaceAttributions;
+    private LatLng[] mLikelyPlaceLatLngs;
+
     private boolean mLocationPermissionGranted;
 
     private Location mLastKnownLocation;
@@ -81,7 +98,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     mContext=getContext();
         // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(getContext());
+        mGeoDataClient = Places.getGeoDataClient(mContext);
 
         // Construct a PlaceDetectionClient.
         mPlaceDetectionClient = Places.getPlaceDetectionClient(getContext());
@@ -111,8 +128,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         return view;
     }
-
-
 
 
     private void getLocationPermission() {
@@ -153,6 +168,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
         // Prompt the user for permission.
         getLocationPermission();
 
@@ -162,6 +179,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
 
+        showCurrentPlace();
     }
 
     /**
@@ -187,7 +205,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         } else {
                             Log.d("TAG", "Current location is null. Using defaults.");
                             Log.e("TAG", "Exception: %s", task.getException());
-                            mMap.moveCamera(CameraUpdateFactory
+                            mMap.animateCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
@@ -199,10 +217,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+
+    private void requestRestaurantList() {
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
     private void updateLocationUI() {
+
         if (mMap == null) {
             return;
         }
@@ -210,6 +246,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (mLocationPermissionGranted) {
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
             } else {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -221,4 +258,106 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+
+    private void showCurrentPlace() {
+        if (mMap == null) {
+            return;
+        }
+
+        if (mLocationPermissionGranted) {
+            // Get the likely places - that is, the businesses and other points of interest that
+            // are the best match for the device's current location.
+            ArrayList<String> restrictToRestaurants = new ArrayList<>();
+            restrictToRestaurants.add(Integer.toString(Place.TYPE_RESTAURANT));
+
+            @SuppressWarnings("MissingPermission") final
+            Task<PlaceLikelihoodBufferResponse> placeResult =
+                    mPlaceDetectionClient.getCurrentPlace(null);
+            placeResult.addOnCompleteListener
+                    (new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
+
+                                // Set the count, handling cases where less than 5 entries are returned.
+                                int count;
+                                if (likelyPlaces.getCount() < M_MAX_ENTRIES) {
+                                    count = likelyPlaces.getCount();
+                                } else {
+                                    count = M_MAX_ENTRIES;
+                                }
+
+                                int i = 0;
+                                mLikelyPlaceNames = new String[count];
+                                mLikelyPlaceAddresses = new String[count];
+                                mLikelyPlaceAttributions = new String[count];
+                                mLikelyPlaceLatLngs = new LatLng[count];
+
+                                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                                    // Build a list of likely places to show the user.
+
+                                    Log.i("TESTING",(String) placeLikelihood.getPlace().getName());
+
+                                    mLikelyPlaceNames[i] = (String) placeLikelihood.getPlace().getName();
+                                    mLikelyPlaceAddresses[i] = (String) placeLikelihood.getPlace()
+                                            .getAddress();
+                                    mLikelyPlaceAttributions[i] = (String) placeLikelihood.getPlace()
+                                            .getAttributions();
+                                    mLikelyPlaceLatLngs[i] = placeLikelihood.getPlace().getLatLng();
+
+                                    i++;
+                                    if (i > (count - 1)) {
+                                        break;
+                                    }
+                                }
+
+                                // Release the place likelihood buffer, to avoid memory leaks.
+                                likelyPlaces.release();
+
+
+                            } else {
+                                Log.e("TAG", "Exception: %s", task.getException());
+                            }
+                        }
+
+                     /*  @Override
+                        public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                            PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
+                            for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                                if (placeLikelihood.getPlace().getPlaceTypes().contains(Place.TYPE_RESTAURANT)) {
+                                    Log.i("TAG", String.format("Values are : %s - %s - %g",
+                                            placeLikelihood.getPlace().getPlaceTypes(),
+                                            placeLikelihood.getPlace().getName(),
+                                            placeLikelihood.getLikelihood()));
+                                }
+                            }
+                            likelyPlaces.release();
+
+                        }else {
+                                Log.e("TAG", "Exception: %s", task.getException());
+                            }
+                        }
+
+
+
+*/
+
+
+
+                    });
+
+        } else {
+            // The user has not granted permission.
+            Log.i("TAG", "The user did not grant location permission.");
+
+            // Add a default marker, because the user hasn't selected a place.
+            mMap.addMarker(new MarkerOptions()
+                          .position(mDefaultLocation));
+
+            // Prompt the user for permission.
+            getLocationPermission();
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package com.bashalir.go4lunch.Controllers.Activities;
 
-
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -17,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,8 +109,6 @@ public class PageActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
-
     private void configureNavigationView() {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
@@ -155,7 +151,7 @@ public class PageActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureBottomView() {
-        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentManager fm = getSupportFragmentManager();
 
         // define your fragments here
          Fragment mapFragment = new MapFragment();
@@ -167,19 +163,19 @@ public class PageActivity extends AppCompatActivity implements NavigationView.On
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        FragmentTransaction fragmentTransaction;
+                        FragmentTransaction ft;
                         switch (item.getItemId()) {
                             case R.id.action_map:
-                                fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.replace(R.id.content_frame, mapFragment).commit();
+                                ft = fm.beginTransaction();
+                                ft.replace(R.id.content_frame, mapFragment).commit();
                                 return true;
                             case R.id.action_restaurant:
-                                fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.replace(R.id.content_frame, restaurantFragment).commit();
+                                ft = fm.beginTransaction();
+                                ft.replace(R.id.content_frame, restaurantFragment).commit();
                                 return true;
                             case R.id.action_workmates:
-                                fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.replace(R.id.content_frame, workmatesFragment).commit();
+                                ft = fm.beginTransaction();
+                                ft.replace(R.id.content_frame, workmatesFragment).commit();
                                 return true;
                         }
                         return true;
