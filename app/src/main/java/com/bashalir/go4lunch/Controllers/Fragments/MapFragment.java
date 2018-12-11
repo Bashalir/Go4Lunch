@@ -77,7 +77,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private boolean mLocationPermissionGranted;
-    private String mGmapLocation;
+    public String mGmapLocation;
     private Location mLastKnownLocation;
 
 
@@ -179,7 +179,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         showCurrentPlace();
 
-        requestRestaurantList();
+
     }
 
     /**
@@ -190,6 +190,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
+
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -197,7 +198,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
 
+                        String gmapLocation;
+
                         if (task.isSuccessful()) {
+
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
                             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
@@ -205,28 +209,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
 
                             mGmapLocation=mLastKnownLocation.getLatitude()+","+mLastKnownLocation.getLongitude();
+
+                            requestRestaurantList(mLastKnownLocation.getLatitude()+","+mLastKnownLocation.getLongitude());
+
+                            Log.d("TAG", mGmapLocation);
                         } else {
                             Log.d("TAG", "Current location is null. Using defaults.");
                             Log.e("TAG", "Exception: %s", task.getException());
 
                             mGmapLocation=mDefaultLocation.latitude+","+mDefaultLocation.longitude;
+                            requestRestaurantList(mDefaultLocation.latitude+","+mDefaultLocation.longitude);
 
                             mMap.animateCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     }
+
+
                 });
+
+
             }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+
+
     }
 
 
-    private void requestRestaurantList() {
+    private void requestRestaurantList(String gmapLocation) {
 
-        mDisp=GMapStream.streamFetchListRestaurant(mGmapLocation).subscribeWith(new DisposableObserver<GMap>(){
+     Log.d(mTag, gmapLocation+"");
+        mDisp=GMapStream.streamFetchListRestaurant(gmapLocation).subscribeWith(new DisposableObserver<GMap>(){
 
 
             @Override
