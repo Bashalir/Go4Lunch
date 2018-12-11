@@ -19,6 +19,6 @@ public interface GMapService {
             .build();
 
     @GET("nearbysearch/json?&radius=500&type=restaurant&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
-    Observable<GMap> getNearbySearch(@Query("location") String location);
+    Observable<GMap> getListRestaurant(@Query("gMapLocation") String gMapLocation);
 
 }
