@@ -178,6 +178,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         getDeviceLocation();
 
         showCurrentPlace();
+
+        requestRestaurantList();
     }
 
     /**
@@ -229,7 +231,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onNext(GMap gMap) {
-                Log.d(mTag, "NEXT ");
+                Log.d(mTag, "NEXT "+gMap.getResults().get(0).getGeometry().getLocation().getLat());
+
+                mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(gMap.getResults().get(0).getGeometry().getLocation().getLat(),gMap.getResults().get(1).getGeometry().getLocation().getLng()))
+                    .title("Hello world"));
             }
 
             @Override

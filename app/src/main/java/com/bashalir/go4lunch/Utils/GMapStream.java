@@ -15,7 +15,6 @@ public class GMapStream {
 
     public static Observable<GMap> streamFetchListRestaurant(String gMapLocation) {
         GMapService gMapService = GMapService.retrofit.create(GMapService.class);
-        String location;
         return gMapService.getListRestaurant(gMapLocation)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

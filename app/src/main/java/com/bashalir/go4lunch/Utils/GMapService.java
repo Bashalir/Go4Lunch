@@ -16,9 +16,10 @@ public interface GMapService {
             .baseUrl("https://maps.googleapis.com/maps/api/place/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(new Utilities().debugRetrofit().build())
             .build();
 
-    @GET("nearbysearch/json?&radius=500&type=restaurant&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
-    Observable<GMap> getListRestaurant(@Query("gMapLocation") String gMapLocation);
+    @GET("nearbysearch/json?position=&radius=500&type=restaurant&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
+    Observable<GMap> getListRestaurant(@Query("location") String gMapLocation);
 
 }
