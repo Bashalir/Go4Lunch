@@ -1,19 +1,29 @@
 package com.bashalir.go4lunch.Models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListRestaurant {
 
-    private ArrayList<String> restaurantIds;
+    private int size;
+    private List<Restaurant> restaurant;
 
-
-    public ArrayList<String> getRestaurantIds() {
-        return restaurantIds;
+    public List<Restaurant> getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurantIds(ArrayList<String> restaurantIds) {
-        this.restaurantIds = restaurantIds;
+    public void setRestaurant(List<Restaurant> restaurant) {
+        this.restaurant = restaurant;
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
 
 
 

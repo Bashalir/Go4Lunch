@@ -17,8 +17,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bashalir.go4lunch.Models.GMap.GMap;
+import com.bashalir.go4lunch.Models.ListRestaurant;
 import com.bashalir.go4lunch.R;
 import com.bashalir.go4lunch.Utils.GMapStream;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -58,6 +60,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @BindView(R.id.map)
     MapView mMapView;
 
+    private ListRestaurant mListRestaurant;
     private final String mTag = getClass().getSimpleName();
 
     private Context mContext;
@@ -208,16 +211,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
 
-                            mGmapLocation=mLastKnownLocation.getLatitude()+","+mLastKnownLocation.getLongitude();
-
                             requestRestaurantList(mLastKnownLocation.getLatitude()+","+mLastKnownLocation.getLongitude());
 
-                            Log.d("TAG", mGmapLocation);
                         } else {
                             Log.d("TAG", "Current location is null. Using defaults.");
                             Log.e("TAG", "Exception: %s", task.getException());
 
-                            mGmapLocation=mDefaultLocation.latitude+","+mDefaultLocation.longitude;
                             requestRestaurantList(mDefaultLocation.latitude+","+mDefaultLocation.longitude);
 
                             mMap.animateCamera(CameraUpdateFactory
@@ -247,11 +246,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onNext(GMap gMap) {
-                Log.d(mTag, "NEXT "+gMap.getResults().get(0).getGeometry().getLocation().getLat());
+                Log.d(mTag, "NEXT ");
 
-                mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(gMap.getResults().get(0).getGeometry().getLocation().getLat(),gMap.getResults().get(1).getGeometry().getLocation().getLng()))
-                    .title("Hello world"));
+                if (gMap.getStatus() == "OK") {
+                    mListRestaurant = new ListRestaurant();
+                    mListRestaurant.setSize(gMap.getResults().size());
+
+                    for (int i = 0; i <= mListRestaurant.getSize() - 1; i++) {
+
+
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(gMap.getResults().get(i).getGeometry().getLocation().getLat(), gMap.getResults().get(i).getGeometry().getLocation().getLng())));
+                    }
+                }
+                else{
+                    Toast.makeText(mContext, "No Restaurant", Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override
@@ -263,8 +274,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onComplete() {
                 Log.e(mTag, "On Complete !!");
             }
-        });
+
+
+    });
     }
+
+
+
 
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
