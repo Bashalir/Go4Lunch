@@ -6,10 +6,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -21,15 +19,13 @@ import android.widget.Toast;
 
 import com.bashalir.go4lunch.Models.GMap.GMap;
 import com.bashalir.go4lunch.Models.ListRestaurant;
+import com.bashalir.go4lunch.Models.Restaurant;
 import com.bashalir.go4lunch.R;
 import com.bashalir.go4lunch.Utils.GMapStream;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.PlaceFilter;
-import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,16 +33,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
@@ -61,6 +54,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     MapView mMapView;
 
     private ListRestaurant mListRestaurant;
+    private Restaurant mRestaurant;
     private final String mTag = getClass().getSimpleName();
 
     private Context mContext;
@@ -248,19 +242,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onNext(GMap gMap) {
                 Log.d(mTag, "NEXT ");
 
-                if (gMap.getStatus() == "OK") {
+                if (gMap.getStatus().equals("OK")) {
                     mListRestaurant = new ListRestaurant();
+                    ArrayList<Restaurant> listRestaurant = new ArrayList<>();
+
                     mListRestaurant.setSize(gMap.getResults().size());
 
                     for (int i = 0; i <= mListRestaurant.getSize() - 1; i++) {
+                        Restaurant restaurant=new Restaurant();
+                        restaurant.setLatitude(gMap.getResults().get(i).getGeometry().getLocation().getLat());
+                        restaurant.setLongitude(gMap.getResults().get(i).getGeometry().getLocation().getLng());
 
+                        listRestaurant.add(restaurant);
 
                         mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(gMap.getResults().get(i).getGeometry().getLocation().getLat(), gMap.getResults().get(i).getGeometry().getLocation().getLng())));
+                                .position(new LatLng(restaurant.getLatitude(),restaurant.getLongitude() ) )
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.go4lunch_marker_in))
+                                );
                     }
+                    mListRestaurant.setRestaurant(listRestaurant);
                 }
                 else{
-                    Toast.makeText(mContext, "No Restaurant", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.NoRestaurant, Toast.LENGTH_SHORT).show();
                 }
 
             }
