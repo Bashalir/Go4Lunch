@@ -243,24 +243,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.d(mTag, "NEXT ");
 
                 if (gMap.getStatus().equals("OK")) {
-                    mListRestaurant = new ListRestaurant();
-                    ArrayList<Restaurant> listRestaurant = new ArrayList<>();
 
-                    mListRestaurant.setSize(gMap.getResults().size());
+                    createListRestaurant(gMap);
 
-                    for (int i = 0; i <= mListRestaurant.getSize() - 1; i++) {
-                        Restaurant restaurant=new Restaurant();
-                        restaurant.setLatitude(gMap.getResults().get(i).getGeometry().getLocation().getLat());
-                        restaurant.setLongitude(gMap.getResults().get(i).getGeometry().getLocation().getLng());
-
-                        listRestaurant.add(restaurant);
-
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(restaurant.getLatitude(),restaurant.getLongitude() ) )
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_in))
-                                );
-                    }
-                    mListRestaurant.setRestaurant(listRestaurant);
                 }
                 else{
                     Toast.makeText(mContext, R.string.NoRestaurant, Toast.LENGTH_SHORT).show();
@@ -283,7 +268,33 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
+    private void createListRestaurant(GMap gMap) {
+        mListRestaurant = new ListRestaurant();
+        ArrayList<Restaurant> listRestaurant = new ArrayList<>();
 
+        mListRestaurant.setSize(gMap.getResults().size());
+
+        for (int i = 0; i <= mListRestaurant.getSize() - 1; i++) {
+            Restaurant restaurant=new Restaurant();
+            restaurant.setLatitude(gMap.getResults().get(i).getGeometry().getLocation().getLat());
+            restaurant.setLongitude(gMap.getResults().get(i).getGeometry().getLocation().getLng());
+
+            listRestaurant.add(restaurant);
+
+            addGmapMarker(restaurant);
+
+
+        }
+        mListRestaurant.setRestaurant(listRestaurant);
+    }
+
+    private void addGmapMarker(Restaurant restaurant) {
+
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(restaurant.getLatitude(),restaurant.getLongitude() ) )
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_off))
+        );
+    }
 
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
