@@ -13,4 +13,7 @@
     <string name="navigation_drawer_open">Ouverture du menu</string>
     <string name="navigation_drawer_close">Fermeture du menu</string>
     <string name="NoRestaurant">No Restaurant</string>
+    <string name="call">Call</string>
+    <string name="like">Like</string>
+    <string name="website">Website</string>
 </resources>

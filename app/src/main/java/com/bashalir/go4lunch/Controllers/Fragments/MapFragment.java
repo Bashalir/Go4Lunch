@@ -379,8 +379,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        Restaurant restaurant = (Restaurant) marker.getTag();
-        Toast.makeText(mContext, restaurant.getLatitude()+"", Toast.LENGTH_SHORT).show();
+        MarkerGmap markerGmap = (MarkerGmap) marker.getTag();
+        Toast.makeText(mContext, markerGmap.getIdPlace()+"", Toast.LENGTH_SHORT).show();
 
         return false;
     }
