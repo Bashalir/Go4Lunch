@@ -6,4 +6,5 @@
     <color name="colorAccentDark">#C51162</color>
     <color name="background_light">#FFF</color>
     <color name="background_dark">#00574B</color>
+    <color name="gold">#FFD700</color>
 </resources>

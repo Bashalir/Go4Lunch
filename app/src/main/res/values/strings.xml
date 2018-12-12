@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Go4Lunch</string>
+    <string name="app_name" translatable="false">Go4Lunch</string>
     <string name="slogan">Find a nice restaurant and invite your co-workers for lunch !</string>
 
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->

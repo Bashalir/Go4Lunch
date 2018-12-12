@@ -2,6 +2,7 @@ package com.bashalir.go4lunch.Controllers.Fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bashalir.go4lunch.Controllers.Activities.RestaurantActivity;
 import com.bashalir.go4lunch.Models.GMap.GMap;
 import com.bashalir.go4lunch.Models.ListMarkerGmap;
 import com.bashalir.go4lunch.Models.ListRestaurant;
@@ -201,8 +203,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
 
-                        String gmapLocation;
-
                         if (task.isSuccessful()) {
 
                             // Set the map's camera position to the current location of the device.
@@ -380,7 +380,19 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     public boolean onMarkerClick(Marker marker) {
 
         MarkerGmap markerGmap = (MarkerGmap) marker.getTag();
-        Toast.makeText(mContext, markerGmap.getIdPlace()+"", Toast.LENGTH_SHORT).show();
+
+        String idPlace=markerGmap.getIdPlace();
+
+      //  Toast.makeText(mContext, markerGmap.getIdPlace()+"", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(mContext, idPlace, Toast.LENGTH_SHORT).show();
+
+
+        //open a Restaurant activity
+        Intent restaurantActivity = new Intent(getActivity(), RestaurantActivity.class);
+        restaurantActivity.putExtra("idPlace",idPlace);
+        startActivityForResult(restaurantActivity, 0);
+
+
 
         return false;
     }
