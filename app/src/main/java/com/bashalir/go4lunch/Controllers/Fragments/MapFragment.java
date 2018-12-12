@@ -257,7 +257,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                         mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(restaurant.getLatitude(),restaurant.getLongitude() ) )
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.go4lunch_marker_in))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_in))
                                 );
                     }
                     mListRestaurant.setRestaurant(listRestaurant);
