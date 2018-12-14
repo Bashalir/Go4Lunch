@@ -60,14 +60,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
 
     private ArrayList<CharSequence> mListIdPlace;
 
-    public ArrayList<CharSequence> getListIdPlace() {
-        return mListIdPlace;
-    }
-
-    public void setListIdPlace(ArrayList<CharSequence> mListIdPlace) {
-        this.mListIdPlace = mListIdPlace;
-    }
-
     private ListMarkerGmap mListMarkerGmap;
 
     private final String mTag = getClass().getSimpleName();
@@ -337,7 +329,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
 
         }
         mListMarkerGmap.setMarkerGmap(listMarkerGmap);
-        setListIdPlace(listIdPlace);
+        mListIdPlace=listIdPlace;
         mListener.mapListRestaurant(listIdPlace);
     }
 
