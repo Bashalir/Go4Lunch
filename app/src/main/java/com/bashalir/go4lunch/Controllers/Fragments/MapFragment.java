@@ -21,9 +21,7 @@ import android.widget.Toast;
 import com.bashalir.go4lunch.Controllers.Activities.RestaurantActivity;
 import com.bashalir.go4lunch.Models.GMap.GMap;
 import com.bashalir.go4lunch.Models.ListMarkerGmap;
-import com.bashalir.go4lunch.Models.ListRestaurant;
 import com.bashalir.go4lunch.Models.MarkerGmap;
-import com.bashalir.go4lunch.Models.Restaurant;
 import com.bashalir.go4lunch.R;
 import com.bashalir.go4lunch.Utils.GMapStream;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -60,6 +58,16 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     @BindView(R.id.map)
     MapView mMapView;
 
+    private ArrayList<CharSequence> mListIdPlace;
+
+    public ArrayList<CharSequence> getListIdPlace() {
+        return mListIdPlace;
+    }
+
+    public void setListIdPlace(ArrayList<CharSequence> mListIdPlace) {
+        this.mListIdPlace = mListIdPlace;
+    }
+
     private ListMarkerGmap mListMarkerGmap;
 
     private final String mTag = getClass().getSimpleName();
@@ -83,6 +91,17 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     private boolean mLocationPermissionGranted;
     private Location mLastKnownLocation;
 
+    MapFragmentListener mListener;
+    ListMarkerGmap mListRestaurant;
+
+    public ListMarkerGmap getListRestaurant() {
+        return mListRestaurant;
+    }
+
+    public void setListRestaurant(ListMarkerGmap mListRestaurant) {
+        this.mListRestaurant = mListRestaurant;
+    }
+
     public MapFragment() {
         // Required empty public constructor
     }
@@ -92,6 +111,28 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     }
 
 
+
+    public interface MapFragmentListener{
+        public void mapListRestaurant(ArrayList<CharSequence> listRestaurant );
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mListener = (MapFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnArticleSelectedListener");
+        }
+    }
+/*
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener.mapListRestaurant(getListIdPlace());
+    }
+*/
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -180,6 +221,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
         getDeviceLocation();
 
         showCurrentPlace();
+
 
 
 
@@ -280,6 +322,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
 
         mListMarkerGmap.setSize(gMap.getResults().size());
 
+        ArrayList<CharSequence>listIdPlace=new ArrayList<>();
+
         for (int i = 0; i <= mListMarkerGmap.getSize() - 1; i++) {
             MarkerGmap markergmap=new MarkerGmap();
             markergmap.setPosition(new LatLng(gMap.getResults().get(i).getGeometry().getLocation().getLat(),gMap.getResults().get(i).getGeometry().getLocation().getLng()));
@@ -287,10 +331,14 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
             markergmap.setIdPlace(gMap.getResults().get(i).getPlaceId());
             listMarkerGmap.add(markergmap);
 
+            listIdPlace.add(gMap.getResults().get(i).getPlaceId());
+
             addGmapMarker(markergmap);
 
         }
         mListMarkerGmap.setMarkerGmap(listMarkerGmap);
+        setListIdPlace(listIdPlace);
+        mListener.mapListRestaurant(listIdPlace);
     }
 
     private void addGmapMarker(MarkerGmap markerGmap) {
@@ -386,13 +434,10 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
       //  Toast.makeText(mContext, markerGmap.getIdPlace()+"", Toast.LENGTH_SHORT).show();
        // Toast.makeText(mContext, idPlace, Toast.LENGTH_SHORT).show();
 
-
         //open a Restaurant activity
         Intent restaurantActivity = new Intent(getActivity(), RestaurantActivity.class);
         restaurantActivity.putExtra("idPlace",idPlace);
         startActivityForResult(restaurantActivity, 0);
-
-
 
         return false;
     }

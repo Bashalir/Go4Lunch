@@ -1,8 +1,11 @@
 package com.bashalir.go4lunch.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
-public class MarkerGmap {
+public class MarkerGmap  {
 
     private LatLng position;
     private String idGmap;
@@ -40,4 +43,5 @@ public class MarkerGmap {
     public void setIdPlace(String idPlace) {
         this.idPlace = idPlace;
     }
+
 }

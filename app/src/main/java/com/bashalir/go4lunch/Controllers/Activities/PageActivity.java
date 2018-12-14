@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -24,10 +25,13 @@ import com.bashalir.go4lunch.Controllers.Fragments.MapFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.RestaurantFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.WorkmatesFragment;
 import com.bashalir.go4lunch.MainActivity;
+import com.bashalir.go4lunch.Models.ListMarkerGmap;
 import com.bashalir.go4lunch.R;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class PageActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
+
+public class PageActivity extends AppCompatActivity implements MapFragment.MapFragmentListener, NavigationView.OnNavigationItemSelectedListener {
 
 @BindView(R.id.activity_page_bottom_navigation)
     BottomNavigationView mBottomNavigationView;
@@ -37,6 +41,8 @@ public class PageActivity extends AppCompatActivity implements NavigationView.On
     NavigationView mNavView;
 @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
+
+    public ArrayList<CharSequence> mListIdPlace=new ArrayList<>();
 
 
     @Override
@@ -153,6 +159,8 @@ public class PageActivity extends AppCompatActivity implements NavigationView.On
     private void configureBottomView() {
         final FragmentManager fm = getSupportFragmentManager();
 
+
+
         // define your fragments here
          Fragment mapFragment = new MapFragment();
          Fragment restaurantFragment = new RestaurantFragment();
@@ -170,8 +178,18 @@ public class PageActivity extends AppCompatActivity implements NavigationView.On
                                 ft.replace(R.id.content_frame, mapFragment).commit();
                                 return true;
                             case R.id.action_restaurant:
+                                Bundle data=new Bundle();
+                                ArrayList<CharSequence> test;
+                                test=new ArrayList<>();
+                                test.add("SAlut");
+                                test.add("Connard");
+
+                                Log.d("TAGreto", "nbr :"+ mListIdPlace.get(1));
+                                data.putCharSequenceArrayList("KEY2",test);
+                                restaurantFragment.setArguments(data);
+
                                 ft = fm.beginTransaction();
-                                ft.replace(R.id.content_frame, restaurantFragment).commit();
+                                ft.replace(R.id.content_frame,restaurantFragment,"KEY2").commit();
                                 return true;
                             case R.id.action_workmates:
                                 ft = fm.beginTransaction();
@@ -184,6 +202,12 @@ public class PageActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    @Override
+    public void mapListRestaurant(ArrayList<CharSequence> listRestaurant) {
+
+        mListIdPlace=listRestaurant;
+        Log.d("TAGdetach", "nbr :"+ mListIdPlace.get(1));
+    }
 }
 
 
