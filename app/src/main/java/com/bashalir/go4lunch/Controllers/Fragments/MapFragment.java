@@ -284,7 +284,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
 
                 if (gMap.getStatus().equals("OK")) {
 
-                    createListRestaurant(gMap);
+                    createListMarker(gMap);
 
                 }
                 else{
@@ -308,7 +308,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     }
 
 
-    private void createListRestaurant(GMap gMap) {
+    private void createListMarker(GMap gMap) {
         mListMarkerGmap = new ListMarkerGmap();
         ArrayList<MarkerGmap> listMarkerGmap = new ArrayList<>();
 

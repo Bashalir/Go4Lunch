@@ -1,13 +1,14 @@
 package com.bashalir.go4lunch.Models;
 
 
-public class Restaurant {
+import android.graphics.Bitmap;
 
+public class Restaurant {
 
     private String name;
     private String address;
-    private String photo;
-    private Integer star;
+    private Bitmap photo;
+    private Double star;
     private String phone;
 
     private Double latitude;
@@ -29,19 +30,19 @@ public class Restaurant {
         this.address = address;
     }
 
-    public String getPhoto() {
+    public Bitmap getPhoto() {
         return photo;
     }
 
-    public void setPhoto(String photo) {
+    public void setPhoto(Bitmap photo) {
         this.photo = photo;
     }
 
-    public Integer getStar() {
+    public Double getStar() {
         return star;
     }
 
-    public void setStar(Integer star) {
+    public void setStar(Double star) {
         this.star = star;
     }
 

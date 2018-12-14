@@ -25,4 +25,7 @@ public interface GMapService {
 
     @GET("details/json?&fields=name,rating,opening_hours,photos,vicinity&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
     Observable<GPlaces> getDetailsRestaurant(@Query("placeid") String idPlace, @Query("language") String language);
+
+    @GET("photo/?maxwidth=400&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
+    Observable<GPlaces> getPhotoRestaurant(@Query("photoreference") String refPhoto);
 }

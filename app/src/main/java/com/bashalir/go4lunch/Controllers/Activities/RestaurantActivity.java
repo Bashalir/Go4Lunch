@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bashalir.go4lunch.R;
+import com.bashalir.go4lunch.Utils.Utilities;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBufferResponse;
@@ -66,7 +67,8 @@ public class RestaurantActivity extends AppCompatActivity {
         getPlaceDetails(idPlace);
 
         // Request photos and metadata for the specified place.
-        getPhoto(idPlace);
+
+      getPhoto(idPlace);
 
 
     }
@@ -93,9 +95,8 @@ public class RestaurantActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
                                 PlacePhotoResponse photo = task.getResult();
                                 Bitmap bitmap = photo.getBitmap();
-                                mPhoto.setImageBitmap(bitmap);
-                                mPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            }
+                               mPhoto.setImageBitmap(bitmap);
+                                mPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);                            }
                         });
                     }
                 }

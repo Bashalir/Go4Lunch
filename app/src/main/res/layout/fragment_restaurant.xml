@@ -11,4 +11,9 @@
         android:layout_height="wrap_content"
         android:text="Restaurant Fragment" />
 
+    <ImageView
+        android:id="@+id/testimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </FrameLayout>

@@ -44,6 +44,9 @@ public class PageActivity extends AppCompatActivity implements MapFragment.MapFr
 
     public ArrayList<CharSequence> mListIdPlace=new ArrayList<>();
 
+    public ArrayList<CharSequence> getListIdPlace() {
+        return mListIdPlace;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,13 +181,9 @@ public class PageActivity extends AppCompatActivity implements MapFragment.MapFr
                                 ft.replace(R.id.content_frame, mapFragment).commit();
                                 return true;
                             case R.id.action_restaurant:
-                                Bundle data=new Bundle();
-                                ArrayList<CharSequence> test;
-                                test=new ArrayList<>();
-                                test.add("SAlut");
-                                test.add("Connard");
 
-                                Log.d("TAGreto", "nbr :"+ mListIdPlace.get(1));
+                                Bundle data=new Bundle();
+
                                 data.putCharSequenceArrayList("KEY2", mListIdPlace);
                                 restaurantFragment.setArguments(data);
 
