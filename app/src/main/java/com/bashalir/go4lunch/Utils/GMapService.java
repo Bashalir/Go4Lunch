@@ -2,6 +2,7 @@ package com.bashalir.go4lunch.Utils;
 
 import com.bashalir.go4lunch.BuildConfig;
 import com.bashalir.go4lunch.Models.GMap.GMap;
+import com.bashalir.go4lunch.Models.GPlaces.GPlaces;
 
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
@@ -19,7 +20,9 @@ public interface GMapService {
             .client(new Utilities().debugRetrofit().build())
             .build();
 
-    @GET("nearbysearch/json?&rankby=distance&type=restaurant&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
+    @GET("nearbysearch/json?&radius=500&type=restaurant&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
     Observable<GMap> getListRestaurant(@Query("location") String gMapLocation);
 
+    @GET("details/json?&fields=name,rating,opening_hours,photos,vicinity&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
+    Observable<GPlaces> getDetailsRestaurant(@Query("placeid") String idPlace, @Query("language") String language);
 }

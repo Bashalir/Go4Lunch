@@ -185,7 +185,7 @@ public class PageActivity extends AppCompatActivity implements MapFragment.MapFr
                                 test.add("Connard");
 
                                 Log.d("TAGreto", "nbr :"+ mListIdPlace.get(1));
-                                data.putCharSequenceArrayList("KEY2",test);
+                                data.putCharSequenceArrayList("KEY2", mListIdPlace);
                                 restaurantFragment.setArguments(data);
 
                                 ft = fm.beginTransaction();
