@@ -7,12 +7,22 @@ public class Restaurant {
 
     private String name;
     private String address;
-    private Bitmap photo;
+    private String refPhoto;
     private Double star;
     private String phone;
+    private Boolean open;
 
     private Double latitude;
     private Double longitude;
+
+
+    public Boolean getOpen() {
+        return open;
+    }
+
+    public void setOpen(Boolean open) {
+        this.open = open;
+    }
 
     public String getName() {
         return name;
@@ -30,12 +40,12 @@ public class Restaurant {
         this.address = address;
     }
 
-    public Bitmap getPhoto() {
-        return photo;
+    public String getRefPhoto() {
+        return refPhoto;
     }
 
-    public void setPhoto(Bitmap photo) {
-        this.photo = photo;
+    public void setRefPhoto(String refPhoto) {
+        this.refPhoto = refPhoto;
     }
 
     public Double getStar() {

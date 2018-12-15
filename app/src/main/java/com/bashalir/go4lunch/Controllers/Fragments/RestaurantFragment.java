@@ -73,22 +73,12 @@ public class RestaurantFragment extends Fragment {
         ArrayList getArgument = arguments.getCharSequenceArrayList("KEY2");
         Text.setText((CharSequence) getArgument.get(1));
 
-        /*
-        mListRestaurant= new ListRestaurant();
-
         for (int i=0;i<=getArgument.size()-1;i++)
         {
             String idPlace= (String) getArgument.get(i);
             requestRestaurantDetails(idPlace);
         }
 
-        mListRestaurant.setRestaurant(mRestaurant);
-*/
-        String url="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key="+BuildConfig.GOOGLE_MAPS_API_KEY;
-
-        Glide.with(this)
-                .load(url)
-                .into(testImage);
 
         return view;
     }
@@ -97,14 +87,16 @@ public class RestaurantFragment extends Fragment {
 
         Log.d(mTag, idPlace+"");
         mDisp=GMapStream.streamFetchDetailsRestaurant(idPlace,"en").subscribeWith(new DisposableObserver<GPlaces>(){
+        GPlaces gp;
+
+
 
             @Override
             public void onNext(GPlaces gPlaces) {
                 Log.d(mTag, "NEXT ");
 
                 if (gPlaces.getStatus().equals("OK")) {
-
-                    createListRestaurant(gPlaces,idPlace);
+                    gPlaces=gp;
                 }
                 else{
                     Toast.makeText(mContext, R.string.NoRestaurant, Toast.LENGTH_SHORT).show();
@@ -112,19 +104,7 @@ public class RestaurantFragment extends Fragment {
 
             }
 
-            private void createListRestaurant(GPlaces gPlaces, String idPlace) {
 
-                Restaurant restaurant=new Restaurant();
-
-
-
-                restaurant.setName(gPlaces.getResult().getName());
-                restaurant.setAddress(gPlaces.getResult().getVicinity());
-                restaurant.setStar(gPlaces.getResult().getRating());
-
-                mRestaurant.add(restaurant);
-
-            }
 
             @Override
             public void onError(Throwable e) {
@@ -133,10 +113,46 @@ public class RestaurantFragment extends Fragment {
 
             @Override
             public void onComplete() {
+              //  createListRestaurant(mRestaurant);
+                createRestaurant(gp,idPlace);
                 Log.e(mTag, "On Complete !!");
             }
 
 
         });
+    }
+
+    public void createRestaurant(GPlaces gPlaces, String idPlace) {
+
+        Restaurant restaurant=new Restaurant();
+
+
+        if (gPlaces.getResult().getPhotos().get(0).getPhotoReference() != null){
+            restaurant.setRefPhoto(gPlaces.getResult().getPhotos().get(0).getPhotoReference());}
+
+        restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());
+        restaurant.setName(gPlaces.getResult().getName());
+        restaurant.setAddress(gPlaces.getResult().getVicinity());
+        restaurant.setStar(gPlaces.getResult().getRating());
+
+       addRestaurant(restaurant);
+
+    }
+
+    private void addRestaurant(Restaurant restaurant) {
+        mRestaurant.add(restaurant);
+        Log.d(mTag, restaurant.getName()+"");
+    }
+
+    private void createListRestaurant(ArrayList<Restaurant> listRestaurant){
+
+        mListRestaurant.setRestaurant(listRestaurant);
+
+        String refPhoto=mRestaurant.get(1).getRefPhoto();
+        String url="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+refPhoto+"&key="+BuildConfig.GOOGLE_MAPS_API_KEY;
+
+        Glide.with(this)
+                .load(url)
+                .into(testImage);
     }
 }

@@ -1,5 +1,6 @@
 package com.bashalir.go4lunch.Utils;
 
+import com.bashalir.go4lunch.Controllers.Fragments.RestaurantFragment;
 import com.bashalir.go4lunch.Models.GMap.GMap;
 import com.bashalir.go4lunch.Models.GPlaces.GPlaces;
 import com.bashalir.go4lunch.Models.ListRestaurant;
