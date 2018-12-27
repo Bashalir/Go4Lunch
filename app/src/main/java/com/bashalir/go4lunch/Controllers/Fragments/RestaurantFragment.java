@@ -26,12 +26,21 @@ import com.bashalir.go4lunch.Utils.Utilities;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,24 +77,47 @@ public class RestaurantFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_restaurant, container, false);
 
         ButterKnife.bind(this,view);
+        String idPlace = null;
 
         Bundle arguments=this.getArguments();
         ArrayList getArgument = arguments.getCharSequenceArrayList("KEY2");
         Text.setText((CharSequence) getArgument.get(1));
 
-        for (int i=0;i<=getArgument.size()-1;i++)
-        {
-            String idPlace= (String) getArgument.get(i);
-            requestRestaurantDetails(idPlace);
-        }
+
+       Observable getIdPlace= Observable.fromIterable(getArgument);
+        mDisp= (Disposable) getIdPlace
+                .timeout(10, TimeUnit.SECONDS)
+                .subscribeWith(makeListRestaurant());
 
 
         return view;
     }
 
-    private void requestRestaurantDetails(String idPlace) {
 
-        Log.d(mTag, idPlace+"");
+
+    private DisposableObserver<String> makeListRestaurant() {
+        return new DisposableObserver<String>() {
+
+            @Override
+            public void onNext(String idPlace) {
+                Log.d(mTag, "NEXT ");
+                requestRestaurantDetails(idPlace);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(mTag, "On Error " + Log.getStackTraceString(e));
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e(mTag, "On Complete !!");
+            }
+        };
+    }
+    private void requestRestaurantDetails( String idPlace) {
+
+
         mDisp=GMapStream.streamFetchDetailsRestaurant(idPlace,"en").subscribeWith(new DisposableObserver<GPlaces>(){
         GPlaces gp;
 
@@ -96,7 +128,7 @@ public class RestaurantFragment extends Fragment {
                 Log.d(mTag, "NEXT ");
 
                 if (gPlaces.getStatus().equals("OK")) {
-                    gPlaces=gp;
+                    createRestaurant(gPlaces);
                 }
                 else{
                     Toast.makeText(mContext, R.string.NoRestaurant, Toast.LENGTH_SHORT).show();
@@ -113,8 +145,7 @@ public class RestaurantFragment extends Fragment {
 
             @Override
             public void onComplete() {
-              //  createListRestaurant(mRestaurant);
-                createRestaurant(gp,idPlace);
+
                 Log.e(mTag, "On Complete !!");
             }
 
@@ -122,15 +153,15 @@ public class RestaurantFragment extends Fragment {
         });
     }
 
-    public void createRestaurant(GPlaces gPlaces, String idPlace) {
+    public void createRestaurant(GPlaces gPlaces) {
 
         Restaurant restaurant=new Restaurant();
 
 
-        if (gPlaces.getResult().getPhotos().get(0).getPhotoReference() != null){
+       /* if (gPlaces.getResult().getPhotos().get(0).getPhotoReference() != null){
             restaurant.setRefPhoto(gPlaces.getResult().getPhotos().get(0).getPhotoReference());}
-
-        restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());
+*/
+//        restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());
         restaurant.setName(gPlaces.getResult().getName());
         restaurant.setAddress(gPlaces.getResult().getVicinity());
         restaurant.setStar(gPlaces.getResult().getRating());

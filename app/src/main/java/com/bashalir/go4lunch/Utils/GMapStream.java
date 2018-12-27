@@ -6,6 +6,8 @@ import com.bashalir.go4lunch.Models.GPlaces.GPlaces;
 import com.bashalir.go4lunch.Models.ListRestaurant;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -30,4 +32,8 @@ public class GMapStream {
                 .observeOn(AndroidSchedulers.mainThread())
                 .timeout(10, TimeUnit.SECONDS);
     }
+
+
+
+
 }

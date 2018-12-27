@@ -125,6 +125,15 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
         mListener.mapListRestaurant(getListIdPlace());
     }
 */
+public void onDestroy() {
+    super.onDestroy();;
+    this.disposeWhenDestroy();
+}
+
+    private void disposeWhenDestroy() {
+    if (mDisp != null && !mDisp.isDisposed())
+        mDisp.dispose();
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
