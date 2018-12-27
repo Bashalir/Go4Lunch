@@ -158,10 +158,12 @@ public class RestaurantFragment extends Fragment {
         Restaurant restaurant=new Restaurant();
 
 
-       /* if (gPlaces.getResult().getPhotos().get(0).getPhotoReference() != null){
+
+        if (!gPlaces.getResult().getPhotos().get(0).getPhotoReference().isEmpty()){
             restaurant.setRefPhoto(gPlaces.getResult().getPhotos().get(0).getPhotoReference());}
-*/
-//        restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());
+       if (gPlaces.getResult().getOpeningHours()!=null)
+       {restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());}
+
         restaurant.setName(gPlaces.getResult().getName());
         restaurant.setAddress(gPlaces.getResult().getVicinity());
         restaurant.setStar(gPlaces.getResult().getRating());

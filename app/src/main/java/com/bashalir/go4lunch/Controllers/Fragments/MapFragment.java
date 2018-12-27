@@ -118,15 +118,9 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
             throw new ClassCastException(context.toString() + " must implement OnArticleSelectedListener");
         }
     }
-/*
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener.mapListRestaurant(getListIdPlace());
-    }
-*/
+
 public void onDestroy() {
-    super.onDestroy();;
+    super.onDestroy();
     this.disposeWhenDestroy();
 }
 
