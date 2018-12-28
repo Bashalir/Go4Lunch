@@ -2,70 +2,59 @@ package com.bashalir.go4lunch.Controllers.Fragments;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import com.bashalir.go4lunch.BuildConfig;
-import com.bashalir.go4lunch.Models.GMap.GMap;
 import com.bashalir.go4lunch.Models.GPlaces.GPlaces;
 import com.bashalir.go4lunch.Models.ListRestaurant;
 import com.bashalir.go4lunch.Models.Restaurant;
 import com.bashalir.go4lunch.R;
 import com.bashalir.go4lunch.Utils.GMapStream;
-import com.bashalir.go4lunch.Utils.Utilities;
-import com.bumptech.glide.Glide;
+import com.bashalir.go4lunch.Views.Adapter.ListViewAdapter;
 import com.google.android.gms.maps.SupportMapFragment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RestaurantFragment extends Fragment {
+public class ListViewFragment extends Fragment {
+
+    @BindView(R.id.fragment_list_view_rv)
+    RecyclerView mRecyclerView;
 
     private final String mTag = getClass().getSimpleName();
 
     private SupportMapFragment mMapFragment;
     private ListRestaurant mListRestaurant;
     private Disposable mDisp;
+    private ListViewAdapter mAdapter;
     private Context mContext;
     private ArrayList<Restaurant> mRestaurant = new ArrayList<>();
 
-    @BindView(R.id.fragment_restaurant_tv)
-    TextView Text;
-    @BindView(R.id.testimage)
-    ImageView testImage;
 
-    public RestaurantFragment() {
+    public ListViewFragment() {
         // Required empty public constructor
     }
 
-    public static RestaurantFragment newInstance(int position) {
-        return (new RestaurantFragment());
+    public static ListViewFragment newInstance(int position) {
+        return (new ListViewFragment());
     }
 
     @Override
@@ -73,16 +62,16 @@ public class RestaurantFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_restaurant, container, false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_list_view, container, false);
+        ButterKnife.bind(this, view);
 
         // Load list of restaurant's idplace
-        Bundle arguments=this.getArguments();
+        Bundle arguments = this.getArguments();
         ArrayList getArgument = arguments.getCharSequenceArrayList("KEY2");
 
         //Load list of details restaurant
-        Observable getIdPlace= Observable.fromIterable(getArgument);
-        mDisp= (Disposable) getIdPlace
+        Observable getIdPlace = Observable.fromIterable(getArgument);
+        mDisp = (Disposable) getIdPlace
                 .timeout(10, TimeUnit.SECONDS)
                 .subscribeWith(makeListRestaurant());
 
@@ -93,8 +82,14 @@ public class RestaurantFragment extends Fragment {
 
     private void configureRecyclerView() {
 
+        mAdapter= new ListViewAdapter(mRestaurant);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+
+
+ 
 
     private DisposableObserver<String> makeListRestaurant() {
         return new DisposableObserver<String>() {
@@ -116,12 +111,12 @@ public class RestaurantFragment extends Fragment {
             }
         };
     }
-    private void requestRestaurantDetails( String idPlace) {
+
+    private void requestRestaurantDetails(String idPlace) {
 
 
-        mDisp=GMapStream.streamFetchDetailsRestaurant(idPlace,"en").subscribeWith(new DisposableObserver<GPlaces>(){
-        GPlaces gp;
-
+        mDisp = GMapStream.streamFetchDetailsRestaurant(idPlace, "en").subscribeWith(new DisposableObserver<GPlaces>() {
+            GPlaces gp;
 
 
             @Override
@@ -130,13 +125,11 @@ public class RestaurantFragment extends Fragment {
 
                 if (gPlaces.getStatus().equals("OK")) {
                     createRestaurant(gPlaces);
-                }
-                else{
+                } else {
                     Toast.makeText(mContext, R.string.NoRestaurant, Toast.LENGTH_SHORT).show();
                 }
 
             }
-
 
 
             @Override
@@ -156,23 +149,38 @@ public class RestaurantFragment extends Fragment {
 
     public void createRestaurant(GPlaces gPlaces) {
 
-        Restaurant restaurant=new Restaurant();
+        Restaurant restaurant = new Restaurant();
 
-       if (!gPlaces.getResult().getPhotos().get(0).getPhotoReference().isEmpty()){
-           String refPhoto=gPlaces.getResult().getPhotos().get(0).getPhotoReference();
-           String linkPhoto="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+refPhoto+"&key="+BuildConfig.GOOGLE_MAPS_API_KEY;
-            restaurant.setLinkPhoto(linkPhoto);}
+        if (!gPlaces.getResult().getPhotos().get(0).getPhotoReference().isEmpty()) {
+            String refPhoto = gPlaces.getResult().getPhotos().get(0).getPhotoReference();
+            String linkPhoto = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + refPhoto + "&key=" + BuildConfig.GOOGLE_MAPS_API_KEY;
+            restaurant.setLinkPhoto(linkPhoto);
+        }
 
-       if (gPlaces.getResult().getOpeningHours()!=null)
-       {restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());}
+        if (gPlaces.getResult().getOpeningHours() != null) {
+            restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());
+        }
 
         restaurant.setName(gPlaces.getResult().getName());
         restaurant.setAddress(gPlaces.getResult().getVicinity());
         restaurant.setStar(gPlaces.getResult().getRating());
 
         mRestaurant.add(restaurant);
-        Log.d(mTag, restaurant.getName()+"");
+        Log.d(mTag, restaurant.getName() + "");
 
     }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+        this.disposeWhenDestroy();
+
+    }
+
+    private void disposeWhenDestroy() {
+        if (mDisp != null && !mDisp.isDisposed()) mDisp.dispose();
+    }
+
 
 }

@@ -3,9 +3,9 @@ package com.bashalir.go4lunch.Controllers.Activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bashalir.go4lunch.R;
-import com.bashalir.go4lunch.Utils.Utilities;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBufferResponse;
@@ -30,12 +29,7 @@ import butterknife.ButterKnife;
 
 public class RestaurantActivity extends AppCompatActivity {
 
-    private GeoDataClient mGeoDataClient;
     private final String mTag = getClass().getSimpleName();
-
-
-
-
     @BindView(R.id.activity_restaurant_name_tv)
     TextView mName;
     @BindView(R.id.activity_restaurant_address_tv)
@@ -44,7 +38,7 @@ public class RestaurantActivity extends AppCompatActivity {
     ImageView mPhoto;
     @BindView(R.id.activity_restaurant_rating_rb)
     RatingBar mRating;
-
+    private GeoDataClient mGeoDataClient;
     private CharSequence mPhone;
     private Uri mWebUri;
 
@@ -56,8 +50,8 @@ public class RestaurantActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        Intent intent=getIntent();
-        String idPlace=intent.getStringExtra("idPlace");
+        Intent intent = getIntent();
+        String idPlace = intent.getStringExtra("idPlace");
 
         Toast.makeText(getApplicationContext(), idPlace, Toast.LENGTH_SHORT).show();
 
@@ -68,39 +62,40 @@ public class RestaurantActivity extends AppCompatActivity {
 
         // Request photos and metadata for the specified place.
 
-      getPhoto(idPlace);
+        getPhoto(idPlace);
 
 
     }
 
     private void getPhoto(String idPlace) {
 
-             final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(idPlace);
-            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
-                @Override
-                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
-                    // Get the list of photos.
-                    PlacePhotoMetadataResponse photos = task.getResult();
-                    if (photos.getPhotoMetadata().getCount()>0) {
-                        // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-                        PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                        // Get the first photo in the list.
-                        PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-                        // Get the attribution text.
-                        CharSequence attribution = photoMetadata.getAttributions();
-                        // Get a full-size bitmap for the photo.
-                        Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
-                        photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-                            @Override
-                            public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                                PlacePhotoResponse photo = task.getResult();
-                                Bitmap bitmap = photo.getBitmap();
-                               mPhoto.setImageBitmap(bitmap);
-                                mPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);                            }
-                        });
-                    }
+        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(idPlace);
+        photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                // Get the list of photos.
+                PlacePhotoMetadataResponse photos = task.getResult();
+                if (photos.getPhotoMetadata().getCount() > 0) {
+                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                    // Get the first photo in the list.
+                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                    // Get the attribution text.
+                    CharSequence attribution = photoMetadata.getAttributions();
+                    // Get a full-size bitmap for the photo.
+                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                            PlacePhotoResponse photo = task.getResult();
+                            Bitmap bitmap = photo.getBitmap();
+                            mPhoto.setImageBitmap(bitmap);
+                            mPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        }
+                    });
                 }
-            });
+            }
+        });
 
 
     }
@@ -119,7 +114,7 @@ public class RestaurantActivity extends AppCompatActivity {
                     mName.setText(myPlace.getName());
                     mAddress.setText(myPlace.getAddress());
                     mWebUri = myPlace.getWebsiteUri();
-                    mPhone=myPlace.getPhoneNumber();
+                    mPhone = myPlace.getPhoneNumber();
                     mRating.setRating(myPlace.getRating());
 
                     places.release();

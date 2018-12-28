@@ -1,8 +1,6 @@
 package com.bashalir.go4lunch.Models;
 
 
-import android.graphics.Bitmap;
-
 public class Restaurant {
 
     private String name;
@@ -79,8 +77,6 @@ public class Restaurant {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
-
-
 
 
 }

@@ -1,6 +1,5 @@
 package com.bashalir.go4lunch.Models.GPlaces;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

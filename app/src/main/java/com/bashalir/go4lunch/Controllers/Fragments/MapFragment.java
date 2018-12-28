@@ -44,7 +44,6 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 
-
 import butterknife.BindView;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
@@ -55,44 +54,27 @@ import io.reactivex.observers.DisposableObserver;
 public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
 
+    private static final int DEFAULT_ZOOM = 15;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private final String mTag = getClass().getSimpleName();
+    private final LatLng mDefaultLocation = new LatLng(48.858093, 2.294694);
     @BindView(R.id.map)
     MapView mMapView;
-
+    MapFragmentListener mListener;
+    ListMarkerGmap mListRestaurant;
     private ArrayList<CharSequence> mListIdPlace;
-
     private ListMarkerGmap mListMarkerGmap;
-
-    private final String mTag = getClass().getSimpleName();
-
     private Context mContext;
     private SupportMapFragment mMapFragment;
-    private final LatLng mDefaultLocation = new LatLng(48.858093, 2.294694);
-    private static final int DEFAULT_ZOOM = 15;
-
     private Disposable mDisp;
     private GoogleMap mMap;
-
     // The entry points to the Places API.
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
-
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-
     private boolean mLocationPermissionGranted;
     private Location mLastKnownLocation;
-
-    MapFragmentListener mListener;
-    ListMarkerGmap mListRestaurant;
-
-    public ListMarkerGmap getListRestaurant() {
-        return mListRestaurant;
-    }
-
-    public void setListRestaurant(ListMarkerGmap mListRestaurant) {
-        this.mListRestaurant = mListRestaurant;
-    }
 
     public MapFragment() {
         // Required empty public constructor
@@ -102,10 +84,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
         return (new MapFragment());
     }
 
+    public ListMarkerGmap getListRestaurant() {
+        return mListRestaurant;
+    }
 
-
-    public interface MapFragmentListener{
-        public void mapListRestaurant(ArrayList<CharSequence> listRestaurant );
+    public void setListRestaurant(ListMarkerGmap mListRestaurant) {
+        this.mListRestaurant = mListRestaurant;
     }
 
     @Override
@@ -119,20 +103,20 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
         }
     }
 
-public void onDestroy() {
-    super.onDestroy();
-    this.disposeWhenDestroy();
-}
+    public void onDestroy() {
+        super.onDestroy();
+        this.disposeWhenDestroy();
+    }
 
     private void disposeWhenDestroy() {
-    if (mDisp != null && !mDisp.isDisposed())
-        mDisp.dispose();
+        if (mDisp != null && !mDisp.isDisposed())
+            mDisp.dispose();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-    mContext=getContext();
+        mContext = getContext();
         // Construct a GeoDataClient.
         mGeoDataClient = Places.getGeoDataClient(mContext);
 
@@ -143,11 +127,10 @@ public void onDestroy() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
 
-
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        mMapFragment=(SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
         if (mMapFragment == null) {
 
@@ -164,7 +147,6 @@ public void onDestroy() {
 
         return view;
     }
-
 
     private void getLocationPermission() {
         /*
@@ -218,8 +200,6 @@ public void onDestroy() {
         showCurrentPlace();
 
 
-
-
         mMap.setOnMarkerClickListener(this);
 
     }
@@ -248,13 +228,13 @@ public void onDestroy() {
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
 
-                            requestRestaurantList(mLastKnownLocation.getLatitude()+","+mLastKnownLocation.getLongitude());
+                            requestRestaurantList(mLastKnownLocation.getLatitude() + "," + mLastKnownLocation.getLongitude());
 
                         } else {
                             Log.d("TAG", "Current location is null. Using defaults.");
                             Log.e("TAG", "Exception: %s", task.getException());
 
-                            requestRestaurantList(mDefaultLocation.latitude+","+mDefaultLocation.longitude);
+                            requestRestaurantList(mDefaultLocation.latitude + "," + mDefaultLocation.longitude);
 
                             mMap.animateCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
@@ -267,18 +247,17 @@ public void onDestroy() {
 
 
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
 
 
     }
 
-
     private void requestRestaurantList(String gmapLocation) {
 
-     Log.d(mTag, gmapLocation+"");
-        mDisp=GMapStream.streamFetchListRestaurant(gmapLocation).subscribeWith(new DisposableObserver<GMap>(){
+        Log.d(mTag, gmapLocation + "");
+        mDisp = GMapStream.streamFetchListRestaurant(gmapLocation).subscribeWith(new DisposableObserver<GMap>() {
 
 
             @Override
@@ -289,8 +268,7 @@ public void onDestroy() {
 
                     createListMarker(gMap);
 
-                }
-                else{
+                } else {
                     Toast.makeText(mContext, R.string.NoRestaurant, Toast.LENGTH_SHORT).show();
                 }
 
@@ -307,9 +285,8 @@ public void onDestroy() {
             }
 
 
-    });
+        });
     }
-
 
     private void createListMarker(GMap gMap) {
         mListMarkerGmap = new ListMarkerGmap();
@@ -317,11 +294,11 @@ public void onDestroy() {
 
         mListMarkerGmap.setSize(gMap.getResults().size());
 
-        ArrayList<CharSequence>listIdPlace=new ArrayList<>();
+        ArrayList<CharSequence> listIdPlace = new ArrayList<>();
 
         for (int i = 0; i <= mListMarkerGmap.getSize() - 1; i++) {
-            MarkerGmap markergmap=new MarkerGmap();
-            markergmap.setPosition(new LatLng(gMap.getResults().get(i).getGeometry().getLocation().getLat(),gMap.getResults().get(i).getGeometry().getLocation().getLng()));
+            MarkerGmap markergmap = new MarkerGmap();
+            markergmap.setPosition(new LatLng(gMap.getResults().get(i).getGeometry().getLocation().getLat(), gMap.getResults().get(i).getGeometry().getLocation().getLng()));
             markergmap.setIdGmap(gMap.getResults().get(i).getId());
             markergmap.setIdPlace(gMap.getResults().get(i).getPlaceId());
             listMarkerGmap.add(markergmap);
@@ -332,7 +309,7 @@ public void onDestroy() {
 
         }
         mListMarkerGmap.setMarkerGmap(listMarkerGmap);
-        mListIdPlace=listIdPlace;
+        mListIdPlace = listIdPlace;
         mListener.mapListRestaurant(listIdPlace);
     }
 
@@ -367,11 +344,10 @@ public void onDestroy() {
                 mLastKnownLocation = null;
                 getLocationPermission();
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
     }
-
 
     private void showCurrentPlace() {
         if (mMap == null) {
@@ -382,8 +358,7 @@ public void onDestroy() {
             // Get the likely places - that is, the businesses and other points of interest that
             // are the best match for the device's current location.
 
-            @SuppressWarnings("MissingPermission") final
-            Task<PlaceLikelihoodBufferResponse> placeResult =
+            @SuppressWarnings("MissingPermission") final Task<PlaceLikelihoodBufferResponse> placeResult =
                     mPlaceDetectionClient.getCurrentPlace(null);
             placeResult.addOnCompleteListener
                     (new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
@@ -412,7 +387,7 @@ public void onDestroy() {
 
             // Add a default marker, because the user hasn't selected a place.
             mMap.addMarker(new MarkerOptions()
-                          .position(mDefaultLocation));
+                    .position(mDefaultLocation));
 
             // Prompt the user for permission.
             getLocationPermission();
@@ -424,16 +399,20 @@ public void onDestroy() {
 
         MarkerGmap markerGmap = (MarkerGmap) marker.getTag();
 
-        String idPlace=markerGmap.getIdPlace();
+        String idPlace = markerGmap.getIdPlace();
 
-      //  Toast.makeText(mContext, markerGmap.getIdPlace()+"", Toast.LENGTH_SHORT).show();
-       // Toast.makeText(mContext, idPlace, Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(mContext, markerGmap.getIdPlace()+"", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(mContext, idPlace, Toast.LENGTH_SHORT).show();
 
         //open a Restaurant activity
         Intent restaurantActivity = new Intent(getActivity(), RestaurantActivity.class);
-        restaurantActivity.putExtra("idPlace",idPlace);
+        restaurantActivity.putExtra("idPlace", idPlace);
         startActivityForResult(restaurantActivity, 0);
 
         return false;
+    }
+
+    public interface MapFragmentListener {
+        public void mapListRestaurant(ArrayList<CharSequence> listRestaurant);
     }
 }

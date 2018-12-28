@@ -1,6 +1,5 @@
 package com.bashalir.go4lunch.Models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListRestaurant {
@@ -23,8 +22,6 @@ public class ListRestaurant {
     public void setSize(int size) {
         this.size = size;
     }
-
-
 
 
 }

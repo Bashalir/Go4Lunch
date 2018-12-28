@@ -1,15 +1,14 @@
-package com.bashalir.go4lunch.Views;
+package com.bashalir.go4lunch.Views.Adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.bashalir.go4lunch.Controllers.Fragments.ListViewFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.MapFragment;
-import com.bashalir.go4lunch.Controllers.Fragments.RestaurantFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.WorkmatesFragment;
 
 public class PageAdapter extends FragmentPagerAdapter {
-
 
 
     public PageAdapter(FragmentManager mgr) {
@@ -18,7 +17,7 @@ public class PageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return(3); // 3 - Number of page to show
+        return (3); // 3 - Number of page to show
     }
 
     @Override
@@ -27,7 +26,7 @@ public class PageAdapter extends FragmentPagerAdapter {
             case 0:
                 return MapFragment.newInstance(position);
             case 1:
-                return RestaurantFragment.newInstance(position);
+                return ListViewFragment.newInstance(position);
             case 2:
                 return WorkmatesFragment.newInstance(position);
             default:

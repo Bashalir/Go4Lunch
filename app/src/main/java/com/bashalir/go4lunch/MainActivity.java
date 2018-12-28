@@ -1,8 +1,8 @@
 package com.bashalir.go4lunch;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,7 +11,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,13 +21,11 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
 
-@BindView(R.id.logo_iv)
+    public static final int RC_SIGN_IN = 123;
+    @BindView(R.id.logo_iv)
     ImageView logo;
-@BindView(R.id.slogan_tv)
+    @BindView(R.id.slogan_tv)
     TextView slogan;
-
-public static final int RC_SIGN_IN=123;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +34,10 @@ public static final int RC_SIGN_IN=123;
         ButterKnife.bind(this);
         slogan.setText(R.string.slogan);
 
-       this.startSignInActivity();
+        this.startSignInActivity();
     }
 
-    private void startSignInActivity(){
+    private void startSignInActivity() {
         // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.FacebookBuilder().build(),

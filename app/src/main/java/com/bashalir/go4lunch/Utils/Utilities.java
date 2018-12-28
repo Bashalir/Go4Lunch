@@ -1,9 +1,6 @@
 package com.bashalir.go4lunch.Utils;
 
 
-import android.graphics.Bitmap;
-
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 

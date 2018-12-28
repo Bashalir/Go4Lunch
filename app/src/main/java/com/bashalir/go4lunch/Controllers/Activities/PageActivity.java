@@ -1,6 +1,7 @@
 package com.bashalir.go4lunch.Controllers.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -11,38 +12,35 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
+import com.bashalir.go4lunch.Controllers.Fragments.ListViewFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.MapFragment;
-import com.bashalir.go4lunch.Controllers.Fragments.RestaurantFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.WorkmatesFragment;
 import com.bashalir.go4lunch.MainActivity;
-import com.bashalir.go4lunch.Models.ListMarkerGmap;
 import com.bashalir.go4lunch.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class PageActivity extends AppCompatActivity implements MapFragment.MapFragmentListener, NavigationView.OnNavigationItemSelectedListener {
 
-@BindView(R.id.activity_page_bottom_navigation)
+    public ArrayList<CharSequence> mListIdPlace = new ArrayList<>();
+    @BindView(R.id.activity_page_bottom_navigation)
     BottomNavigationView mBottomNavigationView;
-@BindView(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-@BindView(R.id.nav_view)
+    @BindView(R.id.nav_view)
     NavigationView mNavView;
-@BindView(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-
-    public ArrayList<CharSequence> mListIdPlace=new ArrayList<>();
 
     public ArrayList<CharSequence> getListIdPlace() {
         return mListIdPlace;
@@ -59,7 +57,7 @@ public class PageActivity extends AppCompatActivity implements MapFragment.MapFr
         this.configureBottomView();
         this.configureNavigationView();
 
-         }
+    }
 
     @Override
 
@@ -88,9 +86,9 @@ public class PageActivity extends AppCompatActivity implements MapFragment.MapFr
         int id = item.getItemId();
 
 
-        switch (id){
+        switch (id) {
 
-            case R.id.search :
+            case R.id.search:
 
                 break;
 
@@ -163,11 +161,10 @@ public class PageActivity extends AppCompatActivity implements MapFragment.MapFr
         final FragmentManager fm = getSupportFragmentManager();
 
 
-
         // define your fragments here
-         Fragment mapFragment = new MapFragment();
-         Fragment restaurantFragment = new RestaurantFragment();
-         Fragment workmatesFragment = new WorkmatesFragment();
+        Fragment mapFragment = new MapFragment();
+        Fragment listViewFragment = new ListViewFragment();
+        Fragment workmatesFragment = new WorkmatesFragment();
 
         // handle navigation selection
         mBottomNavigationView.setOnNavigationItemSelectedListener(
@@ -182,13 +179,13 @@ public class PageActivity extends AppCompatActivity implements MapFragment.MapFr
                                 return true;
                             case R.id.action_restaurant:
 
-                                Bundle data=new Bundle();
+                                Bundle data = new Bundle();
 
                                 data.putCharSequenceArrayList("KEY2", mListIdPlace);
-                                restaurantFragment.setArguments(data);
+                                listViewFragment.setArguments(data);
 
                                 ft = fm.beginTransaction();
-                                ft.replace(R.id.content_frame,restaurantFragment,"KEY2").commit();
+                                ft.replace(R.id.content_frame, listViewFragment, "KEY2").commit();
                                 return true;
                             case R.id.action_workmates:
                                 ft = fm.beginTransaction();
@@ -204,8 +201,8 @@ public class PageActivity extends AppCompatActivity implements MapFragment.MapFr
     @Override
     public void mapListRestaurant(ArrayList<CharSequence> listRestaurant) {
 
-        mListIdPlace=listRestaurant;
-        Log.d("TAGdetach", "nbr :"+ mListIdPlace.get(1));
+        mListIdPlace = listRestaurant;
+        Log.d("TAGdetach", "nbr :" + mListIdPlace.get(1));
     }
 }
 
