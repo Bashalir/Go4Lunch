@@ -170,13 +170,9 @@ public class RestaurantFragment extends Fragment {
         restaurant.setAddress(gPlaces.getResult().getVicinity());
         restaurant.setStar(gPlaces.getResult().getRating());
 
-       addRestaurant(restaurant);
-
-    }
-
-    private void addRestaurant(Restaurant restaurant) {
         mRestaurant.add(restaurant);
         Log.d(mTag, restaurant.getName()+"");
+
     }
 
 }
