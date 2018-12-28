@@ -46,7 +46,7 @@ public class ListViewFragment extends Fragment {
     private Disposable mDisp;
     private ListViewAdapter mAdapter;
     private Context mContext;
-    private ArrayList<Restaurant> mRestaurant = new ArrayList<>();
+    private ArrayList<Restaurant> mRestaurant;
 
 
     public ListViewFragment() {
@@ -61,21 +61,32 @@ public class ListViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        mRestaurant = new ArrayList<>();
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list_view, container, false);
         ButterKnife.bind(this, view);
+
 
         // Load list of restaurant's idplace
         Bundle arguments = this.getArguments();
         ArrayList getArgument = arguments.getCharSequenceArrayList("KEY2");
 
-        //Load list of details restaurant
+       //Load list of details restaurant
+     /*   Observable getIdPlace = Observable.fromIterable(getArgument);
+        mDisp = (Disposable) getIdPlace
+                .timeout(10, TimeUnit.SECONDS)
+                .subscribeWith(makeListRestaurant());*/
+
+
         Observable getIdPlace = Observable.fromIterable(getArgument);
         mDisp = (Disposable) getIdPlace
                 .timeout(10, TimeUnit.SECONDS)
                 .subscribeWith(makeListRestaurant());
 
-        this.configureRecyclerView();
+
+
+
 
         return view;
     }
@@ -107,7 +118,8 @@ public class ListViewFragment extends Fragment {
 
             @Override
             public void onComplete() {
-                Log.e(mTag, "On Complete !!");
+
+                Log.e(mTag, " On Complete !!");
             }
         };
     }
@@ -139,8 +151,8 @@ public class ListViewFragment extends Fragment {
 
             @Override
             public void onComplete() {
-
-                Log.e(mTag, "On Complete !!");
+                configureRecyclerView();
+                Log.e(mTag, "On Complete !!"+mRestaurant.size());
             }
 
 
