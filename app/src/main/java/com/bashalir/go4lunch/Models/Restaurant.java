@@ -7,7 +7,7 @@ public class Restaurant {
 
     private String name;
     private String address;
-    private String refPhoto;
+    private String linkPhoto;
     private Double star;
     private String phone;
     private Boolean open;
@@ -41,11 +41,11 @@ public class Restaurant {
     }
 
     public String getRefPhoto() {
-        return refPhoto;
+        return linkPhoto;
     }
 
-    public void setRefPhoto(String refPhoto) {
-        this.refPhoto = refPhoto;
+    public void setLinkPhoto(String linkPhoto) {
+        this.linkPhoto = linkPhoto;
     }
 
     public Double getStar() {

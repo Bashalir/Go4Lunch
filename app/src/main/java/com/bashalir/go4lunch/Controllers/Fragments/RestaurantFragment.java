@@ -73,26 +73,27 @@ public class RestaurantFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-
         View view = inflater.inflate(R.layout.fragment_restaurant, container, false);
-
         ButterKnife.bind(this,view);
-        String idPlace = null;
 
+        // Load list of restaurant's idplace
         Bundle arguments=this.getArguments();
         ArrayList getArgument = arguments.getCharSequenceArrayList("KEY2");
-        Text.setText((CharSequence) getArgument.get(1));
 
-
-       Observable getIdPlace= Observable.fromIterable(getArgument);
+        //Load list of details restaurant
+        Observable getIdPlace= Observable.fromIterable(getArgument);
         mDisp= (Disposable) getIdPlace
                 .timeout(10, TimeUnit.SECONDS)
                 .subscribeWith(makeListRestaurant());
 
+        this.configureRecyclerView();
 
         return view;
     }
 
+    private void configureRecyclerView() {
+
+    }
 
 
     private DisposableObserver<String> makeListRestaurant() {
@@ -157,10 +158,11 @@ public class RestaurantFragment extends Fragment {
 
         Restaurant restaurant=new Restaurant();
 
+       if (!gPlaces.getResult().getPhotos().get(0).getPhotoReference().isEmpty()){
+           String refPhoto=gPlaces.getResult().getPhotos().get(0).getPhotoReference();
+           String linkPhoto="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+refPhoto+"&key="+BuildConfig.GOOGLE_MAPS_API_KEY;
+            restaurant.setLinkPhoto(linkPhoto);}
 
-
-        if (!gPlaces.getResult().getPhotos().get(0).getPhotoReference().isEmpty()){
-            restaurant.setRefPhoto(gPlaces.getResult().getPhotos().get(0).getPhotoReference());}
        if (gPlaces.getResult().getOpeningHours()!=null)
        {restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());}
 
@@ -177,15 +179,4 @@ public class RestaurantFragment extends Fragment {
         Log.d(mTag, restaurant.getName()+"");
     }
 
-    private void createListRestaurant(ArrayList<Restaurant> listRestaurant){
-
-        mListRestaurant.setRestaurant(listRestaurant);
-
-        String refPhoto=mRestaurant.get(1).getRefPhoto();
-        String url="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+refPhoto+"&key="+BuildConfig.GOOGLE_MAPS_API_KEY;
-
-        Glide.with(this)
-                .load(url)
-                .into(testImage);
-    }
 }
