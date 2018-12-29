@@ -1,6 +1,8 @@
 package com.bashalir.go4lunch.Models;
 
 
+import com.bashalir.go4lunch.Models.GPlaces.OpeningHours;
+
 public class Restaurant {
 
     private String name;
@@ -12,7 +14,19 @@ public class Restaurant {
 
     private Double latitude;
     private Double longitude;
+    private OpeningHours openingHours;
 
+    public String getLinkPhoto() {
+        return linkPhoto;
+    }
+
+    public OpeningHours getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(OpeningHours openingHours) {
+        this.openingHours = openingHours;
+    }
 
     public Boolean getOpen() {
         return open;

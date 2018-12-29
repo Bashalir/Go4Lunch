@@ -174,7 +174,7 @@ public class ListViewFragment extends Fragment {
         restaurant.setName(gPlaces.getResult().getName());
         restaurant.setAddress(gPlaces.getResult().getVicinity());
         restaurant.setStar(gPlaces.getResult().getRating());
-
+        restaurant.setOpeningHours(gPlaces.getResult().getOpeningHours());
         mRestaurant.add(restaurant);
         Log.d(mTag, restaurant.getName() + "");
 

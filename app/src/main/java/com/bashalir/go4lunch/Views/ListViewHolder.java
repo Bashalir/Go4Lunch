@@ -39,7 +39,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
 
         mName.setText(restaurant.getName());
         mAddress.setText(restaurant.getAddress());
-
+        
 
 
     }
