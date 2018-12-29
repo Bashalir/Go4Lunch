@@ -3,6 +3,8 @@ package com.bashalir.go4lunch.Views;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bashalir.go4lunch.Models.Restaurant;
@@ -20,6 +22,12 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     TextView mName;
     @BindView(R.id.fragment_list_view_item_address_tv)
     TextView mAddress;
+   @BindView(R.id.fragment_list_view_item_open_tv)
+    TextView mOpen;
+    @BindView(R.id.fragment_list_view_item_photo_iv)
+    ImageView mPhoto;
+    @BindView(R.id.fragment_list_view_item_rating_rb)
+    RatingBar mStar;
 
 
     public ListViewHolder(View itemView) {
@@ -31,6 +39,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
 
         mName.setText(restaurant.getName());
         mAddress.setText(restaurant.getAddress());
+
 
 
     }

@@ -100,8 +100,6 @@ public class ListViewFragment extends Fragment {
 
 
 
- 
-
     private DisposableObserver<String> makeListRestaurant() {
         return new DisposableObserver<String>() {
 
