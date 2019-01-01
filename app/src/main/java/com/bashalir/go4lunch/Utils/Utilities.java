@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
@@ -115,8 +116,53 @@ public class Utilities {
         return "Open until "+showTime;
     }
 
+    public Boolean closingSoon(Calendar c){
+
+        long diff=c.getTimeInMillis()-now().getTimeInMillis();
+        if (diff<1800000) {return true;}
+
+        return false;
+    }
+
+    public String formatDateToHour(Calendar c) {
+
+        String pattern="h.mm";
+        if (c.get(Calendar.MINUTE)==0){pattern="h";}
+
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern,Locale.getDefault());
+        String formatHour=sdf.format(c.getTime());
+
+        if (c.get(Calendar.HOUR_OF_DAY)>12) {formatHour=formatHour+"pm";} else {formatHour=formatHour+"am";}
+
+        return formatHour;
+    }
+
+    public String openUntil ( List<Calendar>  restaurantHours)
+    {
+        int i=0;
+
+        if (restaurantHours.size()>2){
+            if (restaurantHours.get(1).before(now())) {i=2;}
+        }
+
+            if (restaurantHours.get(i).before(now()) && restaurantHours.get(i+1).after(now())) {
+                if (closingSoon(restaurantHours.get(i+1))) {
+                    return "Closing soon";
+                }
+
+                return "Open until " + formatDateToHour(restaurantHours.get(i+1));
+            }
 
 
+
+
+        return "Closed";
+    }
+
+    public Calendar now(){
+        Calendar now = Calendar.getInstance();
+        return now;
+    }
 
     public List<Calendar> extractHoursOfThisDay(List<Period> periods){
 
@@ -124,9 +170,7 @@ public class Utilities {
 
         Calendar calendarClose;
 
-        Calendar now = Calendar.getInstance();
-        int thisDay=now.get(Calendar.DAY_OF_WEEK)-1;
-
+        int thisDay=now().get(Calendar.DAY_OF_WEEK)-1;
 
        for (int i=0;i<=periods.size()-1;i++)
         {
@@ -158,15 +202,13 @@ public class Utilities {
 
     public Calendar StringHourMinuteToCalendarNow(String hour)
     {
-        Calendar now = Calendar.getInstance();
-
         int hourOpen= Integer.parseInt(hour.substring(0,2));
         int minuteOpen= Integer.parseInt(hour.substring(2,4));
 
-        now.set(Calendar.HOUR_OF_DAY,hourOpen);
-        now.set(Calendar.MINUTE,minuteOpen);
+        now().set(Calendar.HOUR_OF_DAY,hourOpen);
+        now().set(Calendar.MINUTE,minuteOpen);
 
-        return now;
+        return now();
     }
 
 

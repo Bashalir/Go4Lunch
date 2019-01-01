@@ -114,7 +114,82 @@ public class UtilitiesTest {
 
     }
 
+    @Test
+    public void closingSoon() {
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.MINUTE,15);
+        assertEquals(true,new Utilities().closingSoon(now));
+        now.add(Calendar.HOUR_OF_DAY,1);
+        assertEquals(false,new Utilities().closingSoon(now));
+    }
 
+    @Test
+    public void formatDateToHour() {
+
+     Calendar c=Calendar.getInstance();
+     c.set(Calendar.HOUR_OF_DAY,8);
+     c.set(Calendar.MINUTE,0);
+
+     assertEquals("8am",new Utilities().formatDateToHour(c));
+
+     c.set(Calendar.HOUR_OF_DAY,15);
+     c.set(Calendar.MINUTE,30);
+     assertEquals("3.30pm",new Utilities().formatDateToHour(c));
+
+    }
+
+    @Test
+    public void openUntilOneHour() {
+
+        List<Calendar> restaurantHours = new ArrayList<>();
+
+        Calendar now=Calendar.getInstance();
+        now.set(Calendar.HOUR_OF_DAY,15);
+        now.set(Calendar.MINUTE,5);
+
+        Calendar open1=Calendar.getInstance();
+        Calendar close1=Calendar.getInstance();
+
+
+
+        open1.set(Calendar.HOUR_OF_DAY,13);
+        close1.set(Calendar.HOUR_OF_DAY,18);
+        close1.set(Calendar.MINUTE,0);
+        restaurantHours= Arrays.asList(open1,close1);
+
+        assertEquals("Open until 6pm",new Utilities().openUntil(restaurantHours));
+
+    }
+
+    @Test
+    public void openUntilTwoHour() {
+
+        List<Calendar> restaurantHours = new ArrayList<>();
+
+        Calendar now=Calendar.getInstance();
+        now.set(Calendar.HOUR_OF_DAY,15);
+        now.set(Calendar.MINUTE,5);
+
+        Calendar open1=Calendar.getInstance();
+        Calendar close1=Calendar.getInstance();
+        Calendar open2=Calendar.getInstance();
+        Calendar close2=Calendar.getInstance();
+
+
+        open1.set(Calendar.HOUR_OF_DAY,8);
+        close1.set(Calendar.HOUR_OF_DAY,12);
+        close1.set(Calendar.MINUTE,0);
+
+
+        open2.set(Calendar.HOUR_OF_DAY,14);
+        close2.add(Calendar.DAY_OF_MONTH,1);
+        close2.set(Calendar.HOUR_OF_DAY,1);
+        close2.set(Calendar.MINUTE,45);
+
+        restaurantHours= Arrays.asList(open1,close1,open2,close2);
+
+        assertEquals("Open until 6pm",new Utilities().openUntil(restaurantHours));
+    }
 
     @Test
     public void shouldReturn5() {
