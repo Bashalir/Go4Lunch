@@ -3,6 +3,11 @@ package com.bashalir.go4lunch.Utils;
 
 import android.util.Pair;
 
+import com.bashalir.go4lunch.Models.GPlaces.OpeningHours;
+import com.bashalir.go4lunch.Models.GPlaces.Period;
+import com.bashalir.go4lunch.Models.ListRestaurant;
+
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -70,15 +75,98 @@ public class Utilities {
       return OpenningHour;
     }
 
-    public String getOpening() {
+
+    public boolean getOpenMidnight(int dayOpen, int dayClose) {
+
+        if (dayOpen==dayClose) {return false;}
+        return true;
+    }
 
 
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        int hour=calendar.get(Calendar.HOUR_OF_DAY);
-        int minute=calendar.get(Calendar.MINUTE);
+    public String getOpenUntil(boolean night,String timeClose){
 
-        return  String.valueOf(minute);
+        Calendar closureHour = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+
+        int dayOfWeek=now.get(Calendar.DAY_OF_WEEK);
+
+        int hourClose= Integer.parseInt(timeClose.substring(0,2));
+        int minuteClose= Integer.parseInt(timeClose.substring(2,4));
+
+        String pattern="h.mm";
+        if (minuteClose==0){pattern="h";}
+
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+        closureHour.set(Calendar.HOUR_OF_DAY,hourClose);
+        closureHour.set(Calendar.MINUTE,minuteClose);
+
+        if (night==true)
+        {closureHour.add(Calendar.DAY_OF_MONTH,1);}
+
+
+        String showTime=sdf.format(closureHour.getTime());
+
+        if (hourClose>12) {showTime=showTime+"pm";} else {showTime=showTime+"am";}
+
+       long diff=closureHour.getTimeInMillis()-now.getTimeInMillis();
+       if (diff<1800000) {return "Closing soon";}
+
+        return "Open until "+showTime;
+    }
+
+
+
+
+    public List<Calendar> extractHoursOfThisDay(List<Period> periods){
+
+        List<Calendar> restaurantHours = new ArrayList<>();
+
+        Calendar calendarClose;
+
+        Calendar now = Calendar.getInstance();
+        int thisDay=now.get(Calendar.DAY_OF_WEEK)-1;
+
+
+       for (int i=0;i<=periods.size()-1;i++)
+        {
+            int scanDay=periods.get(i).getOpen().getDay();
+
+            //Retrieve the closing hours of the day
+            if (scanDay==thisDay) {
+
+                String openTime=periods.get(i).getOpen().getTime();
+                String closeTime=periods.get(i).getClose().getTime();
+
+                restaurantHours.add(StringHourMinuteToCalendarNow(openTime));
+                calendarClose=StringHourMinuteToCalendarNow(closeTime);
+
+                if (periods.get(i).getClose().getDay()>scanDay) {
+
+                    calendarClose.add(Calendar.DAY_OF_MONTH,1);
+                }
+
+
+                restaurantHours.add(calendarClose);
+
+            }
+        }
+
+        return restaurantHours;
+    }
+
+
+    public Calendar StringHourMinuteToCalendarNow(String hour)
+    {
+        Calendar now = Calendar.getInstance();
+
+        int hourOpen= Integer.parseInt(hour.substring(0,2));
+        int minuteOpen= Integer.parseInt(hour.substring(2,4));
+
+        now.set(Calendar.HOUR_OF_DAY,hourOpen);
+        now.set(Calendar.MINUTE,minuteOpen);
+
+        return now;
     }
 
 
