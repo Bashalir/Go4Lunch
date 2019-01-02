@@ -10,11 +10,15 @@ import android.widget.TextView;
 import com.bashalir.go4lunch.Models.Restaurant;
 import com.bashalir.go4lunch.R;
 import com.bashalir.go4lunch.Utils.Utilities;
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
+import static com.bumptech.glide.request.RequestOptions.centerCropTransform;
+import static com.bumptech.glide.request.RequestOptions.fitCenterTransform;
+import static com.bumptech.glide.request.RequestOptions.option;
+import static com.bumptech.glide.request.RequestOptions.overrideOf;
 
 
 public class ListViewHolder extends RecyclerView.ViewHolder {
@@ -30,19 +34,32 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.fragment_list_view_item_rating_rb)
     RatingBar mStar;
 
+    View mView;
 
     public ListViewHolder(View itemView) {
         super(itemView);
+        mView=itemView;
         ButterKnife.bind(this, itemView);
+
     }
 
     public void updateWithRestaurant(Restaurant restaurant){
 
+        float rating=new Float(restaurant.getStar());
+        if (!(restaurant.getOpeningHours()==null))
+        {
+            
+            mOpen.setText(new Utilities().getOpen(restaurant.getOpeningHours().getPeriods()));}
+
         mName.setText(restaurant.getName());
         mAddress.setText(restaurant.getAddress());
-        mStar.setRating(restaurant.getStar());
-        mOpen.setText(new Utilities().);
+        mStar.setRating(rating);
 
-
+        Glide
+                .with(mView)
+                .load(restaurant.getLinkPhoto())
+                .apply(overrideOf(256,256))
+                .apply(centerCropTransform())
+                .into(mPhoto);
     }
 }
