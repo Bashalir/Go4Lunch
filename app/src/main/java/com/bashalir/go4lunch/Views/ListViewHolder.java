@@ -1,6 +1,8 @@
 package com.bashalir.go4lunch.Views;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -46,10 +48,23 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     public void updateWithRestaurant(Restaurant restaurant){
 
         float rating=new Float(restaurant.getStar());
+
+
         if (!(restaurant.getOpeningHours()==null))
         {
-            
-            mOpen.setText(new Utilities().getOpen(restaurant.getOpeningHours().getPeriods()));}
+
+                String open = new Utilities().getOpen(restaurant.getOpeningHours().getPeriods());
+                mOpen.setText(open);
+                mOpen.setTextColor(Color.parseColor("#04CD6C"));
+
+                if (open.equals("Closing soon") || open.equals("Closed")) {
+                    mOpen.setTextColor(Color.parseColor("#e30425"));
+                }
+
+
+
+
+        }
 
         mName.setText(restaurant.getName());
         mAddress.setText(restaurant.getAddress());
