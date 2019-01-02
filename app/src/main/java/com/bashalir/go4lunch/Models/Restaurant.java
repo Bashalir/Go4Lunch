@@ -8,7 +8,7 @@ public class Restaurant {
     private String name;
     private String address;
     private String linkPhoto;
-    private Double star;
+    private float star;
     private String phone;
     private Boolean open;
 
@@ -60,11 +60,11 @@ public class Restaurant {
         this.linkPhoto = linkPhoto;
     }
 
-    public Double getStar() {
+    public float getStar() {
         return star;
     }
 
-    public void setStar(Double star) {
+    public void setStar(float star) {
         this.star = star;
     }
 

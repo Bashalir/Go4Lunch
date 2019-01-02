@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bashalir.go4lunch.Models.Restaurant;
 import com.bashalir.go4lunch.R;
+import com.bashalir.go4lunch.Utils.Utilities;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +40,8 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
 
         mName.setText(restaurant.getName());
         mAddress.setText(restaurant.getAddress());
-
+        mStar.setRating(restaurant.getStar());
+        mOpen.setText(new Utilities().);
 
 
     }

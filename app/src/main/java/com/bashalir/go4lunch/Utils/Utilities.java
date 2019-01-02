@@ -141,10 +141,13 @@ public class Utilities {
     {
         int i=0;
 
+        if (restaurantHours.isEmpty()){
+            return "Open 24/7";
+        }
+
         if (restaurantHours.size()>2){
             if (restaurantHours.get(1).before(now())) {i=2;}
         }
-
             if (restaurantHours.get(i).before(now()) && restaurantHours.get(i+1).after(now())) {
                 if (closingSoon(restaurantHours.get(i+1))) {
                     return "Closing soon";
@@ -153,15 +156,17 @@ public class Utilities {
                 return "Open until " + formatDateToHour(restaurantHours.get(i+1));
             }
 
-
-
-
         return "Closed";
     }
 
     public Calendar now(){
         Calendar now = Calendar.getInstance();
         return now;
+    }
+
+    public String getOpen(List<Period> periods)
+    {
+        return openUntil(extractHoursOfThisDay(periods));
     }
 
     public List<Calendar> extractHoursOfThisDay(List<Period> periods){
@@ -175,6 +180,9 @@ public class Utilities {
        for (int i=0;i<=periods.size()-1;i++)
         {
             int scanDay=periods.get(i).getOpen().getDay();
+
+            if (periods.get(i).getOpen().getTime().equals("0000") && periods.get(i).getOpen().getDay()==0)
+            {return restaurantHours; }
 
             //Retrieve the closing hours of the day
             if (scanDay==thisDay) {

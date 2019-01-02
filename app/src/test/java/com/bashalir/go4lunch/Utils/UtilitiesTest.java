@@ -182,9 +182,9 @@ public class UtilitiesTest {
 
 
         open2.set(Calendar.HOUR_OF_DAY,14);
-        close2.add(Calendar.DAY_OF_MONTH,1);
-        close2.set(Calendar.HOUR_OF_DAY,1);
-        close2.set(Calendar.MINUTE,45);
+        close2.add(Calendar.DAY_OF_MONTH,0);
+        close2.set(Calendar.HOUR_OF_DAY,23);
+        close2.set(Calendar.MINUTE,23);
 
         restaurantHours= Arrays.asList(open1,close1,open2,close2);
 
