@@ -1,6 +1,7 @@
 package com.bashalir.go4lunch.Utils;
 
 
+import android.provider.CalendarContract;
 import android.util.Pair;
 
 import com.bashalir.go4lunch.Models.GPlaces.OpeningHours;
@@ -22,6 +23,9 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+
+import static java.util.Calendar.DAY_OF_WEEK;
+import static java.util.Calendar.getInstance;
 
 public class Utilities {
 
@@ -87,9 +91,9 @@ public class Utilities {
     public String getOpenUntil(boolean night,String timeClose){
 
         Calendar closureHour = Calendar.getInstance();
-        Calendar now = Calendar.getInstance();
+        Calendar now =Calendar.getInstance();
 
-        int dayOfWeek=now.get(Calendar.DAY_OF_WEEK);
+        int dayOfWeek=now.get(DAY_OF_WEEK);
 
         int hourClose= Integer.parseInt(timeClose.substring(0,2));
         int minuteClose= Integer.parseInt(timeClose.substring(2,4));
@@ -111,7 +115,9 @@ public class Utilities {
         if (hourClose>12) {showTime=showTime+"pm";} else {showTime=showTime+"am";}
 
        long diff=closureHour.getTimeInMillis()-now.getTimeInMillis();
-       if (diff<1800000) {return "Closing soon";}
+       if (diff<3600000 && diff>0) {return "Closing soon";}
+
+        if (diff<0) {return "Closed";}
 
         return "Open until "+showTime;
     }
@@ -169,13 +175,17 @@ public class Utilities {
         return openUntil(extractHoursOfThisDay(periods));
     }
 
+
+
+
     public List<Calendar> extractHoursOfThisDay(List<Period> periods){
 
         List<Calendar> restaurantHours = new ArrayList<>();
 
         Calendar calendarClose;
 
-        int thisDay=now().get(Calendar.DAY_OF_WEEK)-1;
+        //day a number from 0–6, corresponding to the days of the week, starting on Sunday.
+        int thisDay=now().get(DAY_OF_WEEK)-1;
 
        for (int i=0;i<=periods.size()-1;i++)
         {
@@ -210,13 +220,15 @@ public class Utilities {
 
     public Calendar StringHourMinuteToCalendarNow(String hour)
     {
+        Calendar calendar= Calendar.getInstance();
+
         int hourOpen= Integer.parseInt(hour.substring(0,2));
         int minuteOpen= Integer.parseInt(hour.substring(2,4));
 
-        now().set(Calendar.HOUR_OF_DAY,hourOpen);
-        now().set(Calendar.MINUTE,minuteOpen);
+        calendar.set(Calendar.HOUR_OF_DAY,hourOpen);
+        calendar.set(Calendar.MINUTE,minuteOpen);
 
-        return now();
+        return calendar;
     }
 
 

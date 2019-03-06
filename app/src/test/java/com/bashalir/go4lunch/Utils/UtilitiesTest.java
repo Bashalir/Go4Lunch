@@ -1,11 +1,20 @@
 package com.bashalir.go4lunch.Utils;
 
+import android.content.ServiceConnection;
+
 import com.bashalir.go4lunch.Models.GPlaces.Close;
 import com.bashalir.go4lunch.Models.GPlaces.Open;
 import com.bashalir.go4lunch.Models.GPlaces.OpeningHours;
 import com.bashalir.go4lunch.Models.GPlaces.Period;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,11 +22,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+
 import static org.mockito.Mockito.*;
 
 import static org.junit.Assert.*;
+/*
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Utilities.class)*/
 
 public class UtilitiesTest {
+
+
+
 
     @Test
     public void shouldReturnTrueIf2CalendarisReturn() {
@@ -25,27 +42,46 @@ public class UtilitiesTest {
         assertTrue(testOpenningHour.size()==2);
     }
 
-    @Test
-    public void shouldReturn(){
-        Period period = new Period();
-
-        period.getOpen().setDay(6);
-        period.getOpen().setTime("2000");
 
 
-    }
-
-    @Test
+ /*   @Test
     public void shouldReturnClosingSoon(){
+        Calendar endofDays =Calendar.getInstance();
+        endofDays.set(Calendar.HOUR_OF_DAY,20);
+        endofDays.set(Calendar.MINUTE,0);
+
+        Calendar timeclose =Calendar.getInstance();
+        timeclose.set(Calendar.HOUR_OF_DAY,19);
+        timeclose.set(Calendar.MINUTE,10);
+
+
+        PowerMockito.mockStatic(Calendar.class);
+        Mockito.when(Calendar.getInstance()).thenReturn(endofDays,timeclose);
+        Utilities testClass= new Utilities();
+
         assertEquals("Closing soon",new Utilities().getOpenUntil(false,"2000"));
 
     }
 
+
     @Test
     public void shouldReturnOpenUntil11pm(){
+        Calendar endofDays =Calendar.getInstance();
+        endofDays.set(Calendar.HOUR_OF_DAY,23);
+        endofDays.set(Calendar.MINUTE,30);
+
+        Calendar timeclose =Calendar.getInstance();
+        timeclose.set(Calendar.HOUR_OF_DAY,15);
+        timeclose.set(Calendar.MINUTE,45);
+
+
+        PowerMockito.mockStatic(Calendar.class);
+        Mockito.when(Calendar.getInstance()).thenReturn(endofDays,timeclose);
+        Utilities testClass= new Utilities();
+
         assertEquals("Open until 11.30pm",new Utilities().getOpenUntil(false,"2330"));
 
-    }
+    }*/
 
     @Test
     public void shouldReturngetOpenNightTrue(){
@@ -60,15 +96,11 @@ public class UtilitiesTest {
     }
 
 
-    @Test
-    public void shouldReturnFalse(){
-        assertEquals("Open until 11.30pm",new Utilities().getOpenUntil(false,"2330"));
-
-    }
-
 
     @Test
     public void getRestaurantHours() {
+
+        Calendar calendar= Calendar.getInstance();
 
         List<Period> periods;
 
@@ -93,8 +125,8 @@ public class UtilitiesTest {
         period1.setOpen(open1);
         period1.setClose(close1);
 
-        open2.setDay(2);
-        close2.setDay(2);
+        open2.setDay((calendar.get(Calendar.DAY_OF_WEEK))-1);
+        close2.setDay((calendar.get(Calendar.DAY_OF_WEEK))-1);
         open2.setTime("0800");
         close2.setTime("1200");
         period2.setOpen(open2);
@@ -107,10 +139,10 @@ public class UtilitiesTest {
         period3.setOpen(open3);
         period3.setClose(close3);
 
-
         periods = Arrays.asList(period1, period2, period3);
 
-        assertEquals(8,new Utilities().extractHoursOfThisDay(periods).get(1).get(Calendar.HOUR));
+        assertEquals(12,new Utilities().extractHoursOfThisDay(periods).get(1).get(Calendar.HOUR_OF_DAY));
+
 
     }
 
@@ -135,6 +167,17 @@ public class UtilitiesTest {
      c.set(Calendar.HOUR_OF_DAY,15);
      c.set(Calendar.MINUTE,30);
      assertEquals("3.30pm",new Utilities().formatDateToHour(c));
+
+    }
+
+    @Test
+    public void formatDateToHour2() {
+
+        Calendar c=Calendar.getInstance();
+
+        c.set(Calendar.HOUR_OF_DAY,15);
+        c.set(Calendar.MINUTE,30);
+        assertEquals("3.30pm",new Utilities().formatDateToHour(c));
 
     }
 
