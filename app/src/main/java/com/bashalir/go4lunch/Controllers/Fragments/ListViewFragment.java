@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,13 @@ import com.bashalir.go4lunch.R;
 import com.bashalir.go4lunch.Utils.GMapStream;
 import com.bashalir.go4lunch.Utils.Utilities;
 import com.bashalir.go4lunch.Views.Adapter.ListViewAdapter;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +61,11 @@ public class ListViewFragment extends Fragment {
     private Context mContext;
     private ArrayList<Restaurant> mRestaurant;
 
+    private final LatLng mDefaultLocation = new LatLng(48.8709, 2.3318);
+    private Location mMyLocation;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private Location mLastKnownLocation;
+
 
     public ListViewFragment() {
         // Required empty public constructor
@@ -68,6 +80,7 @@ public class ListViewFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mRestaurant = new ArrayList<>();
+        mMyLocation= getDeviceLocation();
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list_view, container, false);
@@ -152,30 +165,59 @@ public class ListViewFragment extends Fragment {
         });
     }
 
+    /**
+     * Gets the current location of the device
+     */
+    public Location getDeviceLocation() {
 
-
-
-    public String distanceMeter(Double lat, Double lng){
-
-            Location myLocation=null;
-            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Location myLocation = new android.location.Location("");
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        // TODO: Consider calling
-        //    ActivityCompat#requestPermissions
-        // here to request the missing permissions, and then overriding
-        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-        //                                          int[] grantResults)
-        // to handle the case where the user grants the permission. See the documentation
-        // for ActivityCompat#requestPermissions for more details.
-        myLocation = locationManager.getLastKnownLocation("");
 
+
+        Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+
+                        if (task.isSuccessful()) {
+
+                            // Set the map's camera position to the current location of the device.
+                            mLastKnownLocation = task.getResult();
+
+                            myLocation.setLatitude(mLastKnownLocation.getLatitude());
+                            myLocation.setLongitude(mLastKnownLocation.getLongitude());
+                            Log.e(mTag, "Location : " + mLastKnownLocation.getLatitude());
+
+
+                        }
+                    }
+                });
+
+        }
+        else
+        {
+            myLocation.setLatitude(mDefaultLocation.latitude);
+            myLocation.setLongitude(mDefaultLocation.longitude);
+
+            Log.e(mTag, "Default Location : " + mDefaultLocation.latitude);
+
+        }
+
+
+        return myLocation;
     }
 
-        android.location.Location restaurantLocation=new android.location.Location("");
+
+
+
+    public String distanceMeter(Double lat, Double lng, Location myLocation){
+
+
+       Location restaurantLocation=new android.location.Location("");
         restaurantLocation.setLatitude(lat);
         restaurantLocation.setLongitude(lng);
-        float distanceInMeters = restaurantLocation.distanceTo(myLocation);
+        Integer distanceInMeters = (int) restaurantLocation.distanceTo(myLocation);
 
 
         return distanceInMeters+"m";
@@ -199,9 +241,10 @@ public class ListViewFragment extends Fragment {
         if (gPlaces.getResult().getOpeningHours() != null) {
             restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());
         }
-        
 
-        restaurant.setDistance(distanceMeter(gPlaces.getResult().getGeometry().getLocation().getLatitude(),gPlaces.getResult().getGeometry().getLocation().getLongitude()));
+
+
+        restaurant.setDistance(distanceMeter(gPlaces.getResult().getGeometry().getLocation().getLat(),gPlaces.getResult().getGeometry().getLocation().getLng(),mMyLocation));
 
         restaurant.setName(gPlaces.getResult().getName());
         restaurant.setAddress(gPlaces.getResult().getVicinity());

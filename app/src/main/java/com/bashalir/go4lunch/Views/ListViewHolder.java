@@ -27,6 +27,8 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.fragment_list_view_item_name_tv)
     TextView mName;
+    @BindView(R.id.fragment_list_view_item_distance_tv)
+    TextView mDistance;
     @BindView(R.id.fragment_list_view_item_address_tv)
     TextView mAddress;
    @BindView(R.id.fragment_list_view_item_open_tv)
@@ -61,12 +63,10 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
                     mOpen.setTextColor(Color.parseColor("#e30425"));
                 }
 
-
-
-
         }
 
         mName.setText(restaurant.getName());
+        mDistance.setText(restaurant.getDistance());
         mAddress.setText(restaurant.getAddress());
         mStar.setRating(rating);
 
