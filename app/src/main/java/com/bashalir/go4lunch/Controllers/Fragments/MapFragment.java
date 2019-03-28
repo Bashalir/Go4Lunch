@@ -289,6 +289,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     }
 
     private void createListMarker(GMap gMap) {
+
         mListMarkerGmap = new ListMarkerGmap();
         ArrayList<MarkerGmap> listMarkerGmap = new ArrayList<>();
 
@@ -308,6 +309,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
             addGmapMarker(markergmap);
 
         }
+
         mListMarkerGmap.setMarkerGmap(listMarkerGmap);
         mListIdPlace = listIdPlace;
         mListener.mapListRestaurant(listIdPlace);

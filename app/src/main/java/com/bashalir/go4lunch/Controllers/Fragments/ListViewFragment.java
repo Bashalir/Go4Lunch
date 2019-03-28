@@ -1,8 +1,13 @@
 package com.bashalir.go4lunch.Controllers.Fragments;
 
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -73,32 +78,21 @@ public class ListViewFragment extends Fragment {
         Bundle arguments = this.getArguments();
         ArrayList getArgument = arguments.getCharSequenceArrayList("KEY2");
 
-       //Load list of details restaurant
-     /*   Observable getIdPlace = Observable.fromIterable(getArgument);
-        mDisp = (Disposable) getIdPlace
-                .timeout(10, TimeUnit.SECONDS)
-                .subscribeWith(makeListRestaurant());*/
-
 
         Observable getIdPlace = Observable.fromIterable(getArgument);
         mDisp = (Disposable) getIdPlace
                 .timeout(10, TimeUnit.SECONDS)
                 .subscribeWith(makeListRestaurant());
 
-
-
-
-
         return view;
     }
 
     private void configureRecyclerView() {
 
-        mAdapter= new ListViewAdapter(mRestaurant);
+        mAdapter = new ListViewAdapter(mRestaurant);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
-
 
 
     private DisposableObserver<String> makeListRestaurant() {
@@ -151,16 +145,50 @@ public class ListViewFragment extends Fragment {
             @Override
             public void onComplete() {
                 configureRecyclerView();
-                Log.e(mTag, "On Complete !!"+mRestaurant.size());
+                Log.e(mTag, "On Complete !!" + mRestaurant.size());
             }
 
 
         });
     }
 
+
+
+
+    public String distanceMeter(Double lat, Double lng){
+
+            Location myLocation=null;
+            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        // TODO: Consider calling
+        //    ActivityCompat#requestPermissions
+        // here to request the missing permissions, and then overriding
+        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+        //                                          int[] grantResults)
+        // to handle the case where the user grants the permission. See the documentation
+        // for ActivityCompat#requestPermissions for more details.
+        myLocation = locationManager.getLastKnownLocation("");
+
+    }
+
+        android.location.Location restaurantLocation=new android.location.Location("");
+        restaurantLocation.setLatitude(lat);
+        restaurantLocation.setLongitude(lng);
+        float distanceInMeters = restaurantLocation.distanceTo(myLocation);
+
+
+        return distanceInMeters+"m";
+
+    }
+
+
+
+
     public void createRestaurant(GPlaces gPlaces) {
 
         Restaurant restaurant = new Restaurant();
+
 
         if (!gPlaces.getResult().getPhotos().get(0).getPhotoReference().isEmpty()) {
             String refPhoto = gPlaces.getResult().getPhotos().get(0).getPhotoReference();
@@ -171,6 +199,9 @@ public class ListViewFragment extends Fragment {
         if (gPlaces.getResult().getOpeningHours() != null) {
             restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());
         }
+        
+
+        restaurant.setDistance(distanceMeter(gPlaces.getResult().getGeometry().getLocation().getLatitude(),gPlaces.getResult().getGeometry().getLocation().getLongitude()));
 
         restaurant.setName(gPlaces.getResult().getName());
         restaurant.setAddress(gPlaces.getResult().getVicinity());

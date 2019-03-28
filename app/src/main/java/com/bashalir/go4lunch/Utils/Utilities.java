@@ -1,12 +1,29 @@
 package com.bashalir.go4lunch.Utils;
 
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.pdf.PdfRenderer;
+import android.location.LocationManager;
 import android.provider.CalendarContract;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.util.Pair;
 
+import com.bashalir.go4lunch.Controllers.Activities.PageActivity;
+import com.bashalir.go4lunch.Models.GMap.Location;
 import com.bashalir.go4lunch.Models.GPlaces.OpeningHours;
 import com.bashalir.go4lunch.Models.GPlaces.Period;
 import com.bashalir.go4lunch.Models.ListRestaurant;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -50,39 +67,41 @@ public class Utilities {
         return httpClient;
     }
 
-    public List<Calendar> DateFormatterWeekdayTextGmap(String dayText)  {
+    public List<Calendar> DateFormatterWeekdayTextGmap(String dayText) {
 
-        Calendar calendarOpen =Calendar.getInstance();
-        Calendar calendarClose =Calendar.getInstance();
+        Calendar calendarOpen = Calendar.getInstance();
+        Calendar calendarClose = Calendar.getInstance();
 
         List<Calendar> OpenningHour = new ArrayList<>();
 
-      dayText=dayText.replaceAll("[^0-9_:_–]","");
+        dayText = dayText.replaceAll("[^0-9_:_–]", "");
 
-      String [] dayTextSplit= dayText.split("–");
-      String [] dayOfWeekSplitOpen=dayTextSplit[0].split(":");
-      String [] dayOfWeekSplitClose=dayTextSplit[1].split(":");
+        String[] dayTextSplit = dayText.split("–");
+        String[] dayOfWeekSplitOpen = dayTextSplit[0].split(":");
+        String[] dayOfWeekSplitClose = dayTextSplit[1].split(":");
 
-      int openHour= Integer.parseInt(dayOfWeekSplitOpen[1]);
-      int openMinute= Integer.parseInt(dayOfWeekSplitOpen[2]);
+        int openHour = Integer.parseInt(dayOfWeekSplitOpen[1]);
+        int openMinute = Integer.parseInt(dayOfWeekSplitOpen[2]);
 
-      int closeHour= Integer.parseInt(dayOfWeekSplitClose[0]);
-      int closeMinute= Integer.parseInt(dayOfWeekSplitClose[1]);
+        int closeHour = Integer.parseInt(dayOfWeekSplitClose[0]);
+        int closeMinute = Integer.parseInt(dayOfWeekSplitClose[1]);
 
-      calendarOpen.set(Calendar.HOUR,openHour);
-      calendarOpen.set(Calendar.MINUTE,openMinute);
+        calendarOpen.set(Calendar.HOUR, openHour);
+        calendarOpen.set(Calendar.MINUTE, openMinute);
 
-      calendarClose.set(Calendar.HOUR,closeHour);
-      calendarClose.set(Calendar.MINUTE,closeMinute);
+        calendarClose.set(Calendar.HOUR, closeHour);
+        calendarClose.set(Calendar.MINUTE, closeMinute);
 
-      OpenningHour.add(calendarOpen);
-      OpenningHour.add(calendarClose);
+        OpenningHour.add(calendarOpen);
+        OpenningHour.add(calendarClose);
 
-      return OpenningHour;
+        return OpenningHour;
     }
 
 
+
     public boolean getOpenMidnight(int dayOpen, int dayClose) {
+
 
         if (dayOpen==dayClose) {return false;}
         return true;
@@ -130,6 +149,10 @@ public class Utilities {
 
         return false;
     }
+
+
+
+
 
     public String formatDateToHour(Calendar c) {
 

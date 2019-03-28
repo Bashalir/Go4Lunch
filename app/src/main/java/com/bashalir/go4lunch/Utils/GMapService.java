@@ -23,7 +23,7 @@ public interface GMapService {
     @GET("nearbysearch/json?&radius=500&type=restaurant&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
     Observable<GMap> getListRestaurant(@Query("location") String gMapLocation);
 
-    @GET("details/json?&fields=name,rating,opening_hours,photos,vicinity&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
+    @GET("details/json?&fields=name,geometry,rating,opening_hours,photos,vicinity&key=" + BuildConfig.GOOGLE_MAPS_API_KEY)
     Observable<GPlaces> getDetailsRestaurant(@Query("placeid") String idPlace, @Query("language") String language);
 
 }

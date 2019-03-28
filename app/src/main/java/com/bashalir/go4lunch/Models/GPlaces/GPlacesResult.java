@@ -10,7 +10,10 @@ public class GPlacesResult {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("opening_hours")
+    @SerializedName("geometry")
+    @Expose
+    private Geometry geometry;
+    @SerializedName("openingHours")
     @Expose
     private OpeningHours openingHours;
     @SerializedName("photos")
@@ -30,6 +33,10 @@ public class GPlacesResult {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Geometry getGeometry() {  return geometry;    }
+
+    public void setGeometry(Geometry geometry) {  this.geometry = geometry; }
 
     public OpeningHours getOpeningHours() {
         return openingHours;
