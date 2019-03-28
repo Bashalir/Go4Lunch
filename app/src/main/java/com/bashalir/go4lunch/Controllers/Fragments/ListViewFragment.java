@@ -19,6 +19,7 @@ import com.bashalir.go4lunch.Models.ListRestaurant;
 import com.bashalir.go4lunch.Models.Restaurant;
 import com.bashalir.go4lunch.R;
 import com.bashalir.go4lunch.Utils.GMapStream;
+import com.bashalir.go4lunch.Utils.Utilities;
 import com.bashalir.go4lunch.Views.Adapter.ListViewAdapter;
 import com.google.android.gms.maps.SupportMapFragment;
 
@@ -173,7 +174,7 @@ public class ListViewFragment extends Fragment {
 
         restaurant.setName(gPlaces.getResult().getName());
         restaurant.setAddress(gPlaces.getResult().getVicinity());
-        restaurant.setStar(gPlaces.getResult().getRating());
+        restaurant.setStar(new Utilities().ratingThreeStar(gPlaces.getResult().getRating()));
         restaurant.setOpeningHours(gPlaces.getResult().getOpeningHours());
         mRestaurant.add(restaurant);
         Log.d(mTag, restaurant.getName() + "");

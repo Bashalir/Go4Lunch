@@ -144,6 +144,13 @@ public class Utilities {
         return formatHour;
     }
 
+    public Double ratingThreeStar(double rating){
+
+        return rating=(rating/5)*3;
+
+    }
+
+
     public String openUntil ( List<Calendar>  restaurantHours)
     {
         Calendar now = Calendar.getInstance();
