@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -117,7 +118,7 @@ public class Utilities {
        long diff=closureHour.getTimeInMillis()-now.getTimeInMillis();
        if (diff<3600000 && diff>0) {return "Closing soon";}
 
-        if (diff<0) {return "Closed";}
+      //  if (diff<0) {return "Closed";}
 
         return "Open until "+showTime;
     }
@@ -145,6 +146,8 @@ public class Utilities {
 
     public String openUntil ( List<Calendar>  restaurantHours)
     {
+        Calendar now = Calendar.getInstance();
+
         int i=0;
 
         if (restaurantHours.isEmpty()){
@@ -152,9 +155,10 @@ public class Utilities {
         }
 
         if (restaurantHours.size()>2){
-            if (restaurantHours.get(1).before(now())) {i=2;}
+            if (restaurantHours.get(1).before(now)) {i=2;}
         }
-            if (restaurantHours.get(i).before(now()) && restaurantHours.get(i+1).after(now())) {
+
+        if (restaurantHours.get(i).before(now) && restaurantHours.get(i+1).after(now) ) {
                 if (closingSoon(restaurantHours.get(i+1))) {
                     return "Closing soon";
                 }
@@ -181,11 +185,13 @@ public class Utilities {
     public List<Calendar> extractHoursOfThisDay(List<Period> periods){
 
         List<Calendar> restaurantHours = new ArrayList<>();
+        List periodDayHour= new ArrayList<>();
 
         Calendar calendarClose;
 
         //day a number from 0–6, corresponding to the days of the week, starting on Sunday.
         int thisDay=now().get(DAY_OF_WEEK)-1;
+
 
        for (int i=0;i<=periods.size()-1;i++)
         {
@@ -207,7 +213,6 @@ public class Utilities {
 
                     calendarClose.add(Calendar.DAY_OF_MONTH,1);
                 }
-
 
                 restaurantHours.add(calendarClose);
 
