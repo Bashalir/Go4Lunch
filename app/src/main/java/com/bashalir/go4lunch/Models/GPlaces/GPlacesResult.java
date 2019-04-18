@@ -13,7 +13,7 @@ public class GPlacesResult {
     @SerializedName("geometry")
     @Expose
     private Geometry geometry;
-    @SerializedName("openingHours")
+    @SerializedName("opening_hours")
     @Expose
     private OpeningHours openingHours;
     @SerializedName("photos")

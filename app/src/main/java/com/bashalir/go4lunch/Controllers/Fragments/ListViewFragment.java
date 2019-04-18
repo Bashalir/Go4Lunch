@@ -28,8 +28,6 @@ import com.bashalir.go4lunch.Utils.GMapStream;
 import com.bashalir.go4lunch.Utils.Utilities;
 import com.bashalir.go4lunch.Views.Adapter.ListViewAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
