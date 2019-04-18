@@ -188,6 +188,11 @@ public class Utilities {
             if (restaurantHours.get(1).before(now)) {i=2;}
         }
 
+        if (restaurantHours.get(i).before(restaurantHours.get(i+1)) && now.before(restaurantHours.get(i+1)))
+        {
+            return "Open until " + formatDateToHour(restaurantHours.get(i+1));
+        }
+
         if (restaurantHours.get(i).before(now) && restaurantHours.get(i+1).after(now) ) {
                 if (closingSoon(restaurantHours.get(i+1))) {
                     return "Closing soon";

@@ -187,7 +187,8 @@ public class UtilitiesTest {
     public void openUntilOneHour() {
 
         Calendar fakeNow =Calendar.getInstance();
-        fakeNow.set(Calendar.HOUR_OF_DAY,15);
+        fakeNow.set(Calendar.HOUR_OF_DAY,9);
+        fakeNow.set(Calendar.DAY_OF_WEEK,3);
         fakeNow.set(Calendar.MINUTE,0);
 
         List<Calendar> restaurantHours = new ArrayList<>();
@@ -195,8 +196,10 @@ public class UtilitiesTest {
         Calendar open1=Calendar.getInstance();
         Calendar close1=Calendar.getInstance();
 
-        open1.set(Calendar.HOUR_OF_DAY,11);
-        close1.set(Calendar.HOUR_OF_DAY,18);
+        open1.set(Calendar.HOUR_OF_DAY,2);
+        open1.set(Calendar.DAY_OF_WEEK,2);
+        close1.set(Calendar.HOUR_OF_DAY,20);
+        close1.set(Calendar.DAY_OF_WEEK,3);
         close1.set(Calendar.MINUTE,0);
         restaurantHours= Arrays.asList(open1,close1);
 
@@ -220,7 +223,7 @@ public class UtilitiesTest {
         List<Calendar> restaurantHours = new ArrayList<>();
 
         Calendar fakeNow =Calendar.getInstance();
-        fakeNow.set(Calendar.HOUR_OF_DAY,14);
+        fakeNow.set(Calendar.HOUR_OF_DAY,15);
         fakeNow.set(Calendar.MINUTE,0);
 
 
@@ -245,7 +248,7 @@ public class UtilitiesTest {
         PowerMockito.mockStatic(Calendar.class);
         Mockito.when(Calendar.getInstance()).thenReturn(fakeNow);
 
-        assertEquals("Open until 6pm",new Utilities().openUntil(restaurantHours));
+        assertEquals("Open until 11pm",new Utilities().openUntil(restaurantHours));
     }
 
     @Test
