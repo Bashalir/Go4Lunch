@@ -206,15 +206,9 @@ public class UtilitiesTest {
         PowerMockito.mockStatic(Calendar.class);
         Mockito.when(Calendar.getInstance()).thenReturn(fakeNow);
 
-        assertEquals("Open until 6pm",new Utilities().openUntil(restaurantHours));
+        assertEquals("Open until 8pm",new Utilities().openUntil(restaurantHours));
 
     }
-
-  /*  @Test
-    public void oneHundredMeter() {
-        assertEquals("100m", new Utilities().distanceMeter(0.0d,0.0d));
-    }*/
-
 
 
     @Test
