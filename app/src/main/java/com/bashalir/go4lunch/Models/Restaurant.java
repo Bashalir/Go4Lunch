@@ -16,10 +16,19 @@ public class Restaurant {
     private Double latitude;
     private Double longitude;
     private OpeningHours openingHours;
+    private String idPlace;
 
 
     public String getDistance() {
         return distance;
+    }
+
+    public String getIdPlace() {
+        return idPlace;
+    }
+
+    public void setIdPlace(String idPlace) {
+        this.idPlace = idPlace;
     }
 
     public void setDistance(String distance) {

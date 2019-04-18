@@ -3,6 +3,7 @@ package com.bashalir.go4lunch.Controllers.Fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -20,11 +21,13 @@ import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import com.bashalir.go4lunch.BuildConfig;
+import com.bashalir.go4lunch.Controllers.Activities.RestaurantActivity;
 import com.bashalir.go4lunch.Models.GPlaces.GPlaces;
 import com.bashalir.go4lunch.Models.ListRestaurant;
 import com.bashalir.go4lunch.Models.Restaurant;
 import com.bashalir.go4lunch.R;
 import com.bashalir.go4lunch.Utils.GMapStream;
+import com.bashalir.go4lunch.Utils.ItemClickSupport;
 import com.bashalir.go4lunch.Utils.Utilities;
 import com.bashalir.go4lunch.Views.Adapter.ListViewAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -34,6 +37,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -58,6 +62,7 @@ public class ListViewFragment extends Fragment {
     private ListViewAdapter mAdapter;
     private Context mContext;
     private ArrayList<Restaurant> mRestaurant;
+    private String mIdPlace;
 
     private final LatLng mDefaultLocation = new LatLng(48.8709, 2.3318);
     private Location mMyLocation;
@@ -90,12 +95,17 @@ public class ListViewFragment extends Fragment {
         ArrayList getArgument = arguments.getCharSequenceArrayList("KEY2");
 
 
+
+
         Observable getIdPlace = Observable.fromIterable(getArgument);
         mDisp = (Disposable) getIdPlace
                 .timeout(10, TimeUnit.SECONDS)
                 .subscribeWith(makeListRestaurant());
 
+        this.configureOnClickRecyclerView(getArgument);
+
         return view;
+
     }
 
     private void configureRecyclerView() {
@@ -140,7 +150,7 @@ public class ListViewFragment extends Fragment {
                 Log.d(mTag, "NEXT ");
 
                 if (gPlaces.getStatus().equals("OK")) {
-                    createRestaurant(gPlaces);
+                    createRestaurant(gPlaces,idPlace);
                 } else {
                     Toast.makeText(mContext, R.string.NoRestaurant, Toast.LENGTH_SHORT).show();
                 }
@@ -222,9 +232,35 @@ public class ListViewFragment extends Fragment {
     }
 
 
+    /**
+     * Start Restaurant Activity on item clicked
+     */
+    private void configureOnClickRecyclerView( ArrayList <CharSequence>  getArgument) {
 
 
-    public void createRestaurant(GPlaces gPlaces) {
+        ItemClickSupport itemClickSupport = ItemClickSupport.addTo(mRecyclerView, R.layout.fragment_list_view_item)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                        //open a Restaurant activity
+
+                         List<Restaurant> restaurants=mAdapter.getRestaurant();
+
+
+                        Intent restaurantActivity = new Intent(getActivity(), RestaurantActivity.class);
+                        restaurantActivity.putExtra("idPlace", restaurants.get(position).getIdPlace());
+                        startActivityForResult(restaurantActivity, 0);
+
+                    }
+                });
+    }
+
+
+
+
+
+    public void createRestaurant(GPlaces gPlaces, String idPlace) {
 
         Restaurant restaurant = new Restaurant();
 
@@ -240,7 +276,7 @@ public class ListViewFragment extends Fragment {
         }
 
 
-
+        restaurant.setIdPlace(idPlace);
         restaurant.setDistance(distanceMeter(gPlaces.getResult().getGeometry().getLocation().getLat(),gPlaces.getResult().getGeometry().getLocation().getLng(),mMyLocation));
 
         restaurant.setName(gPlaces.getResult().getName());
