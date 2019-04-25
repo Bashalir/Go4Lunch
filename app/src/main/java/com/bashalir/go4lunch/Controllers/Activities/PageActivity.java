@@ -23,6 +23,7 @@ import com.bashalir.go4lunch.Controllers.Fragments.MapFragment;
 import com.bashalir.go4lunch.Controllers.Fragments.WorkmatesFragment;
 import com.bashalir.go4lunch.MainActivity;
 import com.bashalir.go4lunch.R;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -115,6 +116,8 @@ public class PageActivity extends AppCompatActivity implements MapFragment.MapFr
         return true;
 
     }
+
+
 
     private void configureNavigationView() {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

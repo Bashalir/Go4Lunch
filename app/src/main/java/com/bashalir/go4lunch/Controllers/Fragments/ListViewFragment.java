@@ -94,9 +94,6 @@ public class ListViewFragment extends Fragment {
         Bundle arguments = this.getArguments();
         ArrayList getArgument = arguments.getCharSequenceArrayList("KEY2");
 
-
-
-
         Observable getIdPlace = Observable.fromIterable(getArgument);
         mDisp = (Disposable) getIdPlace
                 .timeout(10, TimeUnit.SECONDS)
@@ -227,7 +224,7 @@ public class ListViewFragment extends Fragment {
         Integer distanceInMeters = (int) restaurantLocation.distanceTo(myLocation);
 
 
-        return distanceInMeters+"m";
+        return distanceInMeters+" m";
 
     }
 
@@ -255,8 +252,6 @@ public class ListViewFragment extends Fragment {
                     }
                 });
     }
-
-
 
 
 

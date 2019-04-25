@@ -2,13 +2,17 @@ package com.bashalir.go4lunch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bashalir.go4lunch.Api.UserHelper;
 import com.bashalir.go4lunch.Controllers.Activities.PageActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -22,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static final int RC_SIGN_IN = 123;
+
+    protected FirebaseUser getCurrentUser () {return FirebaseAuth.getInstance().getCurrentUser();}
+
+
     @BindView(R.id.logo_iv)
     ImageView logo;
     @BindView(R.id.slogan_tv)
@@ -64,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                this.createUserInFirestore(user);
+
+
                 this.startPageActivity();
                 // ...
             } else {
@@ -75,10 +87,40 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void createUserInFirestore(FirebaseUser user) {
+
+
+            if (user != null){
+
+                String urlPicture = (user.getPhotoUrl() != null) ? user.getPhotoUrl().toString() : null;
+                String username = user.getDisplayName();
+                String uid = user.getUid();
+                String idRestaurant=null;
+
+                UserHelper.createUser(uid, username, urlPicture, idRestaurant).addOnFailureListener(this.onFailureListener());
+            }
+
+    }
+
     private void startPageActivity() {
         Intent intent = new Intent(this, PageActivity.class);
         startActivity(intent);
     }
+
+
+    // --------------------
+    // ERROR HANDLER
+    // --------------------
+
+    protected OnFailureListener onFailureListener(){
+        return new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), getString(R.string.fui_error_unknown), Toast.LENGTH_LONG).show();
+            }
+        };
+    }
+
 
 
 }
