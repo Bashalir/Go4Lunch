@@ -68,22 +68,35 @@ public class RestaurantActivity extends AppCompatActivity {
         // Construct a GeoDataClient.
         mGeoDataClient = Places.getGeoDataClient(this);
 
+        configureFab(idPlace);
+
+
         getPlaceDetails(idPlace);
 
         // Request photos and metadata for the specified place.
 
         getPhoto(idPlace);
 
-        configureFab(idPlace);
 
 
     }
 
     private void configureFab(String idPlace) {
+
+
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               /*mFab.setColorFilter(getResources().getColor(R.color.background_dark));
+               mFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_call_green_24dp));
+               mFab.setBackgroundColor(getResources().getColor(R.color.background_dark));*/
+
+               mFab.setBackgroundTintList(getResources().getColorStateList(R.color.fab));
+                mFab.setRippleColor(getResources().getColorStateList(R.color.fab));
+               mName.setText("Coucou2");
+
                 UserHelper.updateRestaurant(idPlace, FirebaseAuth.getInstance().getUid());
+
             }
         });
     }

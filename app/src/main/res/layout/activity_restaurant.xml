@@ -143,6 +143,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
          android:src="@drawable/ic_check_black_24dp"
+        android:backgroundTint="@color/fab"
         android:tint="@color/background_light"
         android:layout_marginRight="@dimen/medium_margin"
         app:layout_constraintBottom_toBottomOf="@id/activity_restaurant_photo_iv"
