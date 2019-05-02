@@ -47,21 +47,20 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void updateWithRestaurant(Restaurant restaurant){
+    public void updateWithRestaurant(Restaurant restaurant) {
 
-        float rating=new Float(restaurant.getStar());
+        float rating = new Float(restaurant.getStar());
 
 
-        if (!(restaurant.getOpeningHours()==null))
-        {
+        if (!(restaurant.getOpeningHours() == null)) {
 
-                String open = new Utilities().getOpen(restaurant.getOpeningHours().getPeriods());
-                mOpen.setText(open);
-                mOpen.setTextColor(Color.parseColor("#04CD6C"));
+            String open = new Utilities().getOpen(restaurant.getOpeningHours().getPeriods());
+            mOpen.setText(open);
+            mOpen.setTextColor(Color.parseColor("#04CD6C"));
 
-                if (open.equals("Closing soon") || open.equals("Closed")) {
-                    mOpen.setTextColor(Color.parseColor("#e30425"));
-                }
+            if (open.equals("Closing soon") || open.equals("Closed")) {
+                mOpen.setTextColor(Color.parseColor("#e30425"));
+            }
 
         }
 
@@ -70,11 +69,13 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         mAddress.setText(restaurant.getAddress());
         mStar.setRating(rating);
 
-        Glide
-                .with(mView)
-                .load(restaurant.getLinkPhoto())
-                .apply(overrideOf(256,256))
-                .apply(centerCropTransform())
-                .into(mPhoto);
+        if (!(restaurant.getLinkPhoto()== null)) {
+            Glide
+                    .with(mView)
+                    .load(restaurant.getLinkPhoto())
+                    .apply(overrideOf(256, 256))
+                    .apply(centerCropTransform())
+                    .into(mPhoto);
+        }
     }
 }

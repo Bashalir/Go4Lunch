@@ -260,15 +260,17 @@ public class ListViewFragment extends Fragment {
         Restaurant restaurant = new Restaurant();
 
 
-        if (!gPlaces.getResult().getPhotos().get(0).getPhotoReference().isEmpty()) {
-            String refPhoto = gPlaces.getResult().getPhotos().get(0).getPhotoReference();
-            String linkPhoto = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + refPhoto + "&key=" + BuildConfig.GOOGLE_MAPS_API_KEY;
-            restaurant.setLinkPhoto(linkPhoto);
+        if (!(gPlaces.getResult().getPhotos() == null)) {
+            if (!gPlaces.getResult().getPhotos().get(0).getPhotoReference().isEmpty()) {
+                String refPhoto = gPlaces.getResult().getPhotos().get(0).getPhotoReference();
+                String linkPhoto = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + refPhoto + "&key=" + BuildConfig.GOOGLE_MAPS_API_KEY;
+                restaurant.setLinkPhoto(linkPhoto);
+            }
         }
 
-        if (gPlaces.getResult().getOpeningHours() != null) {
-            restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());
-        }
+            if (gPlaces.getResult().getOpeningHours() != null) {
+                restaurant.setOpen(gPlaces.getResult().getOpeningHours().getOpenNow());
+            }
 
 
         restaurant.setIdPlace(idPlace);
