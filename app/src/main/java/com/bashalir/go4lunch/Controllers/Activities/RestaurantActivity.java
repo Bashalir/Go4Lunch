@@ -5,13 +5,17 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bashalir.go4lunch.Api.UserHelper;
+import com.bashalir.go4lunch.MainActivity;
 import com.bashalir.go4lunch.R;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
@@ -23,9 +27,12 @@ import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class RestaurantActivity extends AppCompatActivity {
 
@@ -38,6 +45,9 @@ public class RestaurantActivity extends AppCompatActivity {
     ImageView mPhoto;
     @BindView(R.id.activity_restaurant_rating_rb)
     RatingBar mRating;
+    @BindView((R.id.fab))
+    FloatingActionButton mFab;
+
     private GeoDataClient mGeoDataClient;
     private CharSequence mPhone;
     private Uri mWebUri;
@@ -64,8 +74,20 @@ public class RestaurantActivity extends AppCompatActivity {
 
         getPhoto(idPlace);
 
+        configureFab(idPlace);
+
 
     }
+
+    private void configureFab(String idPlace) {
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserHelper.updateRestaurant(idPlace, FirebaseAuth.getInstance().getUid());
+            }
+        });
+    }
+
 
     private void getPhoto(String idPlace) {
 

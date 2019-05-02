@@ -38,7 +38,9 @@ public class UserHelper {
     public static Task<Void> updateUsername(String username, String uid) {
         return UserHelper.getUsersCollection().document(uid).update("username", username);
     }
-
+    public static Task<Void> updateRestaurant(String idRestaurant, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("idRestaurant", idRestaurant);
+    }
     // --- DELETE ---
 
     public static Task<Void> deleteUser(String uid) {
