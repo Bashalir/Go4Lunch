@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 public class UserHelper {
 
@@ -29,9 +30,17 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).get();
     }
 
+    public static Query getAllUserbyRestaurant(String idRestaurant){
+        return UserHelper.getUsersCollection()
+                .whereEqualTo("idRestaurant",idRestaurant)
+                .orderBy("username");
+    }
+
     public static Task<DocumentSnapshot> getRestaurant(String idRestaurant){
         return UserHelper.getUsersCollection().document(idRestaurant).get();
     }
+
+
 
     // --- UPDATE ---
 
